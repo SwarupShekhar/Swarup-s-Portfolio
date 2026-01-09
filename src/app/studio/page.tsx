@@ -45,7 +45,15 @@ export default function StudioPage() {
   );
 }
 
-function SystemCard({ project, index }: { project: any, index: number }) {
+interface Project {
+  id: string;
+  name: string;
+  status: string;
+  description: string;
+  link: string | null;
+}
+
+function SystemCard({ project, index }: { project: Project, index: number }) {
   const [isHovered, setIsHovered] = useState(false);
 
   // 3. STATUS AURA LOGIC

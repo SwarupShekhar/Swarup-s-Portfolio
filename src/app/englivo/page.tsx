@@ -8,7 +8,7 @@ import Image from "next/image";
 
 export default function EnglivoPage() {
   return (
-    <main className="max-w-6xl mx-auto py-20 px-6 space-y-28">
+    <main className="max-w-6xl mx-auto pt-32 md:pt-40 pb-20 px-6 space-y-28">
       {/* HERO */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}

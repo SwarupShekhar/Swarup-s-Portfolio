@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 type ParticleCircleProps = {
   colors: string[];
@@ -22,7 +22,9 @@ export function ParticleCircle({
   particleCount,
   size,
 }: ParticleCircleProps) {
-  const particles = useMemo<Particle[]>(() => {
+  const [particles, setParticles] = useState<Particle[]>([]);
+
+  useEffect(() => {
     const result: Particle[] = [];
     for (let i = 0; i < particleCount; i++) {
       const angle = Math.random() * Math.PI * 2;
@@ -40,7 +42,8 @@ export function ParticleCircle({
         color,
       });
     }
-    return result;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setParticles(result);
   }, [colors, particleCount, size, particleSize]);
 
   return (
