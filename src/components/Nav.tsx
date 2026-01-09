@@ -7,6 +7,14 @@ import { useState } from "react";
 import GitHubButton from "@/components/GitHubButton";
 import LinkedInButton from "@/components/LinkedInButton";
 
+import { Imperial_Script } from "next/font/google";
+
+const imperialScript = Imperial_Script({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-imperial",
+});
+
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -25,8 +33,31 @@ export default function Nav() {
           <span className="hidden md:inline">Core Online</span>
         </div>
 
-        <Link href="/" className="text-white font-semibold tracking-tight absolute left-1/2 -translate-x-1/2">
-          Swarup
+        <Link href="/" className="absolute left-1/2 -translate-x-1/2 group">
+          <div className={`${imperialScript.className} text-3xl md:text-3xl relative cursor-pointer`}>
+            {/* Outline / Stroke Layer */}
+            <span
+              className="relative z-10 block"
+              style={{
+                WebkitTextStroke: '0.5px rgba(255,255,255,0.6)',
+                color: 'transparent',
+              }}
+            >
+              &nbsp;Swarup&nbsp;
+            </span>
+
+            {/* Fill / Hover Layer */}
+            <span
+              className="absolute inset-0 z-20 text-[#37FF8B] overflow-hidden transition-[width] duration-500 ease-in-out w-0 group-hover:w-full"
+              style={{
+                WebkitTextStroke: '0.5px #37FF8B',
+                borderRight: '4px solid #37FF8B',
+                filter: 'drop-shadow(0 0 10px #37FF8B)',
+              }}
+            >
+              &nbsp;Swarup&nbsp;
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Links and Buttons */}
