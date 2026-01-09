@@ -24,6 +24,9 @@ export default function EnglivoPage() {
           <h1 className="mt-3 text-5xl font-semibold leading-tight tracking-tight">
             Englivo - The AI Fluency Engine
           </h1>
+          <p className="mt-4 text-xs font-mono uppercase tracking-widest text-emerald-400/80">
+            Product Engineer • Vaidik Eduservices
+          </p>
           <p className="mt-6 text-lg text-white/60 leading-relaxed">
             {englivo.subtitle}
           </p>

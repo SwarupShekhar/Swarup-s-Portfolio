@@ -17,6 +17,9 @@ export default function VaidikPage() {
                 <h1 className="mt-3 text-5xl font-semibold leading-tight tracking-tight">
                     Vaidik Tutoring
                 </h1>
+                <p className="mt-4 text-xs font-mono uppercase tracking-widest text-emerald-400/80">
+                    Product Engineer • Vaidik Eduservices
+                </p>
                 <p className="mt-6 text-lg text-white/60 leading-relaxed max-w-2xl">
                     A comprehensive K12 and test-prep marketplace that functions as a student operating system. Combining diagnostics, tutoring workflows, and academic management.
                 </p>

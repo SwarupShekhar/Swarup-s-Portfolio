@@ -4,6 +4,8 @@ export const studio = [
     name: "Englivo",
     status: "Production",
     description: "AI-powered fluency engine for natural English speaking.",
+    ownership: "Product Engineer • Vaidik Eduservices",
+    type: "professional",
     link: "https://naturalfluency.vercel.app",
   },
   {
@@ -11,6 +13,8 @@ export const studio = [
     name: "Vaidik Tutoring",
     status: "Production",
     description: "K12 and test-prep tutoring marketplace and student OS.",
+    ownership: "Product Engineer • Vaidik Eduservices",
+    type: "professional",
     link: "https://vaidiktutorin.vercel.app",
   },
   {
@@ -18,6 +22,8 @@ export const studio = [
     name: "WeHostt",
     status: "Live",
     description: "Revenue SaaS for hospitality lead capture and client routing.",
+    ownership: "Product Engineer • Vaidik Eduservices",
+    type: "professional",
     link: "https://www.wehostt.com",
   },
   {
@@ -25,6 +31,8 @@ export const studio = [
     name: "Tutoring Engine",
     status: "Production",
     description: "Multi-role booking, messaging, and payments infrastructure.",
+    ownership: "Product Engineer • Vaidik Eduservices",
+    type: "professional",
     link: null,
   },
   {
@@ -32,6 +40,8 @@ export const studio = [
     name: "Vibespark",
     status: "In Development",
     description: "Real-time voice and video platform using WebRTC and sockets.",
+    ownership: "Independent R&D Lab",
+    type: "independent",
     link: null,
   },
 ];

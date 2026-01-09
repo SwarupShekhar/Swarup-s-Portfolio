@@ -17,6 +17,9 @@ export default function WeHosttPage() {
                 <h1 className="mt-3 text-5xl font-semibold leading-tight tracking-tight">
                     WeHostt
                 </h1>
+                <p className="mt-4 text-xs font-mono uppercase tracking-widest text-emerald-400/80">
+                    Product Engineer • Vaidik Eduservices
+                </p>
                 <p className="mt-6 text-lg text-white/60 leading-relaxed max-w-2xl">
                     Vertical SaaS designed for hospitality lead capture. It routes client inquiries directly into a revenue-generating workflow, bypassing the complexity of generic CRMs.
                 </p>
