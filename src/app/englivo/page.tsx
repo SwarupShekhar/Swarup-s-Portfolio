@@ -4,6 +4,7 @@ import { englivo } from "@/content/englivo";
 import IntelligenceField from "@/components/IntelligenceField";
 import ArchitectureDiagram from "@/components/ArchitectureDiagram";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function EnglivoPage() {
   return (
@@ -27,14 +28,21 @@ export default function EnglivoPage() {
             {englivo.subtitle}
           </p>
         </div>
-        <motion.img
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          src="https://res.cloudinary.com/de8vvmpip/image/upload/v1767946774/homepagedark_o4fhlv.png"
-          alt="Englivo homepage"
-          className="rounded-2xl shadow-xl shadow-indigo-500/10"
-        />
+          className="relative"
+        >
+          <Image
+            src="https://res.cloudinary.com/de8vvmpip/image/upload/v1767946774/homepagedark_o4fhlv.png"
+            alt="Englivo homepage"
+            width={800}
+            height={600}
+            className="rounded-2xl shadow-xl shadow-indigo-500/10 w-full h-auto"
+            priority
+          />
+        </motion.div>
       </motion.section>
 
       {/* THE FLUENCY GAP */}
@@ -62,13 +70,19 @@ export default function EnglivoPage() {
           </h2>
           <p className="mt-6 text-white/70 leading-relaxed">{englivo.insight}</p>
         </div>
-        <motion.img
+        <motion.div
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.4 }}
-          src="https://res.cloudinary.com/de8vvmpip/image/upload/v1767946774/heartheshift_wuqs50.png"
-          alt="Psychology of speaking confidence"
-          className="rounded-xl shadow-lg border border-white/5"
-        />
+          className="relative"
+        >
+          <Image
+            src="https://res.cloudinary.com/de8vvmpip/image/upload/v1767946774/heartheshift_wuqs50.png"
+            alt="Psychology of speaking confidence"
+            width={600}
+            height={400}
+            className="rounded-xl shadow-lg border border-white/5 w-full h-auto"
+          />
+        </motion.div>
       </motion.section>
 
       {/* THE SYSTEM */}
@@ -79,13 +93,19 @@ export default function EnglivoPage() {
         transition={{ duration: 0.6 }}
         className="grid md:grid-cols-2 gap-12 items-center"
       >
-        <motion.img
+        <motion.div
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.4 }}
-          src="https://res.cloudinary.com/de8vvmpip/image/upload/v1767946774/thefluencyengine_xkp1b8.png"
-          alt="Englivo fluency engine"
-          className="rounded-xl shadow-lg border border-white/5"
-        />
+          className="relative"
+        >
+          <Image
+            src="https://res.cloudinary.com/de8vvmpip/image/upload/v1767946774/thefluencyengine_xkp1b8.png"
+            alt="Englivo fluency engine"
+            width={600}
+            height={400}
+            className="rounded-xl shadow-lg border border-white/5 w-full h-auto"
+          />
+        </motion.div>
         <div>
           <h2 className="text-3xl font-semibold tracking-tight">
             The Fluency Engine
@@ -110,20 +130,32 @@ export default function EnglivoPage() {
         </p>
 
         <div className="grid md:grid-cols-2 gap-8 mt-12">
-          <motion.img
+          <motion.div
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.4 }}
-            src="https://res.cloudinary.com/de8vvmpip/image/upload/v1767946774/Dashboard1_aklund.png"
-            alt="Fluency dashboard"
-            className="rounded-xl shadow-lg border border-white/5"
-          />
-          <motion.img
+            className="relative"
+          >
+            <Image
+              src="https://res.cloudinary.com/de8vvmpip/image/upload/v1767946774/Dashboard1_aklund.png"
+              alt="Fluency dashboard"
+              width={500}
+              height={300}
+              className="rounded-xl shadow-lg border border-white/5 w-full h-auto"
+            />
+          </motion.div>
+          <motion.div
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.4 }}
-            src="https://res.cloudinary.com/de8vvmpip/image/upload/v1767946774/dashboard2_u96f91.png"
-            alt="Fluency metrics"
-            className="rounded-xl shadow-lg border border-white/5"
-          />
+            className="relative"
+          >
+            <Image
+              src="https://res.cloudinary.com/de8vvmpip/image/upload/v1767946774/dashboard2_u96f91.png"
+              alt="Fluency metrics"
+              width={500}
+              height={300}
+              className="rounded-xl shadow-lg border border-white/5 w-full h-auto"
+            />
+          </motion.div>
         </div>
       </motion.section>
 

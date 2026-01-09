@@ -8,7 +8,7 @@ export default function IntelligenceField() {
       <ParticleCircle
         colors={["#34d399", "#22c55e", "#a7f3d0", "#4ade80"]}
         particleSize={[1, 4]}
-        particleCount={900}
+        particleCount={150}
         size={500}
       />
     </div>
