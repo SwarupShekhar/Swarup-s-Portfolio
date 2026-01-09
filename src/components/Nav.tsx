@@ -1,49 +1,106 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
-const statusMap: Record<string, string> = {
-  "/": "Studio Online",
-  "/englivo": "Englivo Engine Active",
-  "/studio": "System Map Loaded",
-  "/about": "Profile Loaded",
-  "/demo": "Fireball Demo Active",
-};
+import GitHubButton from "@/components/GitHubButton";
+import LinkedInButton from "@/components/LinkedInButton";
 
 export default function Nav() {
-  const pathname = usePathname();
-  const status = statusMap[pathname] || "System Ready";
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="w-full border-b border-white/10 bg-black/80 backdrop-blur">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div>
-          <p className="font-semibold tracking-wide">
-            Swarup <span className="text-white/40 ml-2">• Protarchi</span>
-          </p>
+    <>
+      <motion.nav
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="fixed top-4 left-1/2 -translate-x-1/2 z-50 
+        backdrop-blur-xl bg-white/5 border border-white/10 
+        rounded-2xl px-6 md:px-8 py-3 flex items-center justify-between gap-10 shadow-lg
+        w-[90%] max-w-5xl"
+      >
+        <div className="flex items-center gap-2 text-sm text-white/80">
+          <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+          <span className="hidden md:inline">Core Online</span>
         </div>
 
-        <div className="flex items-center gap-10 text-sm text-white/60">
-          <a href="/englivo" className="hover:text-white">
-            Englivo
-          </a>
-          <a href="/studio" className="hover:text-white">
-            Studio
-          </a>
-          <a href="/demo" className="hover:text-white">
-            Demo
-          </a>
-          <a href="/about" className="hover:text-white">
-            About
-          </a>
+        <Link href="/" className="text-white font-semibold tracking-tight absolute left-1/2 -translate-x-1/2">
+          Swarup
+        </Link>
 
-          <div className="flex items-center gap-2 text-xs font-mono">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            {status}
+        {/* Desktop Links and Buttons */}
+        <div className="hidden md:flex items-center gap-6">
+          <div className="flex gap-6 text-sm text-white/60">
+            <Link href="/studio" className="hover:text-white transition">
+              System Map
+            </Link>
+            <Link href="/englivo" className="hover:text-white transition">
+              Englivo
+            </Link>
+            <Link href="/about" className="hover:text-white transition">
+              About
+            </Link>
+          </div>
+
+          <div className="flex gap-3">
+            <GitHubButton />
+            <LinkedInButton />
           </div>
         </div>
-      </div>
-    </nav>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden text-white/80 hover:text-white transition"
+          aria-label="Toggle menu"
+        >
+          {isOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18" />
+              <path d="m6 6 18 18" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" x2="21" y1="6" y2="6" />
+              <line x1="3" x2="21" y1="12" y2="12" />
+              <line x1="3" x2="21" y1="18" y2="18" />
+            </svg>
+          )}
+        </button>
+      </motion.nav>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-40 bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 md:hidden"
+          >
+            <div className="flex flex-col items-center gap-8 text-xl text-white/80 font-light">
+              <Link href="/" onClick={() => setIsOpen(false)} className="hover:text-white transition">
+                Home
+              </Link>
+              <Link href="/studio" onClick={() => setIsOpen(false)} className="hover:text-white transition">
+                System Map
+              </Link>
+              <Link href="/englivo" onClick={() => setIsOpen(false)} className="hover:text-white transition">
+                Englivo
+              </Link>
+              <Link href="/about" onClick={() => setIsOpen(false)} className="hover:text-white transition">
+                About
+              </Link>
+            </div>
+
+            <div className="absolute bottom-10 flex items-center gap-2 text-sm text-white/40">
+              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+              <span>Core Online</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
-

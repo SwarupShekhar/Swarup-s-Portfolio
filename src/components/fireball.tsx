@@ -25,31 +25,7 @@ export function FireBall({
 
   useEffect(() => {
     const container = containerRef?.current || (blobRef.current?.parentElement);
-    if (!container) {
-      console.warn("FireBall: No container found, using fallback animation");
-      // If no container is found, use fallback animation
-      let animationFrame: number;
-      
-      const animate = () => {
-        if (blobRef.current) {
-          const x = Math.sin(Date.now() / 2000) * 50;
-          const y = Math.cos(Date.now() / 2000) * 50;
-          const scale = 1 + Math.sin(Date.now() / 3000) * 0.1;
-          
-          blobRef.current.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
-        }
-        animationFrame = requestAnimationFrame(animate);
-      };
-      
-      animate();
-      
-      return () => {
-        if (animationFrame) {
-          cancelAnimationFrame(animationFrame);
-        }
-      };
-      return; // Exit early since we're using fallback
-    }
+    if (!container) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       if (container) {
@@ -127,23 +103,22 @@ export function FireBall({
         cancelAnimationFrame(animationFrame);
       }
     };
-  }, [followMouse, intensity, isMouseInside, mousePosition, containerRef]);
+  }, [followMouse, intensity, isMouseInside, mousePosition]);
 
   return (
     <div
       ref={blobRef}
-      className="relative w-[800px] h-[800px] rounded-full opacity-100"
+      className="relative w-[700px] h-[700px] rounded-full opacity-80"
       style={{
-        background: `radial-gradient(circle at 30% 30%, ${colors[0]}, ${colors[1]} 30%, ${colors[2] || colors[0]} 60%, ${colors[3] || colors[1]} 85%)`,
-        filter: `blur(${blobRadius * 8}px)`,
-        boxShadow: `0 0 80px 30px ${colors[0]}80, 0 0 120px 50px ${colors[1]}60`,
+        background: `radial-gradient(circle at 30% 30%, ${colors[0]}, ${colors[1]} 40%, transparent 75%)`,
+        filter: `blur(${blobRadius * 6}px)`,
       }}
       aria-hidden="true"
     >
       <div
         className="absolute inset-0 rounded-full"
         style={{
-          background: `radial-gradient(circle at 30% 30%, ${ballColor}80, transparent 90%)`,
+          background: `radial-gradient(circle at 30% 30%, ${ballColor}40, transparent 70%)`,
         }}
       />
     </div>

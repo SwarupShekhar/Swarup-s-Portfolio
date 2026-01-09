@@ -1,52 +1,37 @@
 export const studio = [
   {
-    name: "Vibespark (Real-Time Systems Lab)",
-    description:
-      "A mobile-first voice and video platform built to explore WebRTC, identity, and real-time user matching.",
-    highlights: [
-      "WebRTC signaling via Socket.IO",
-      "JWT authentication & MongoDB backend",
-      "React Native + Expo mobile client",
-      "Live user presence & call routing",
-    ],
-    link: null,
-    image: null,
+    id: "englivo",
+    name: "Englivo",
+    status: "Production",
+    description: "AI-powered fluency engine for natural English speaking.",
+    link: "https://naturalfluency.vercel.app",
   },
   {
-    name: "Tutoring Marketplace Engine",
-    description:
-      "A full-stack tutoring marketplace with multi-role authentication, booking, and real-time messaging.",
-    highlights: [
-      "JWT-based authentication with HttpOnly cookies",
-      "PostgreSQL relational data model",
-      "Tutor discovery, booking, and chat system",
-    ],
-    link: null,
-    image: null,
+    id: "vaidik",
+    name: "Vaidik Tutoring",
+    status: "Production",
+    description: "K12 and test-prep tutoring marketplace and student OS.",
+    link: "https://vaidiktutorin.vercel.app",
   },
   {
-    name: "Vaidik K12 Platform",
-    description:
-      "An interactive K-12 learning platform with AI-driven tutor matching and diagnostic flows.",
-    highlights: [
-      "Student, parent, and tutor roles",
-      "AI-assisted onboarding",
-      "Progress tracking dashboards",
-    ],
-    link: "https://vaidiktutoring.vercel.app",
-    image: null,
-  },
-  {
+    id: "wehostt",
     name: "WeHostt",
-    description:
-      "A conversion-optimized SaaS for short-term rental virtual assistant services.",
-    highlights: [
-      "Trust-focused UI",
-      "Service workflow mapping",
-      "Lead-to-client funnel design",
-    ],
+    status: "Live",
+    description: "Revenue SaaS for hospitality lead capture and client routing.",
     link: "https://www.wehostt.com",
-    image: null,
+  },
+  {
+    id: "tutoring-engine",
+    name: "Tutoring Engine",
+    status: "Production",
+    description: "Multi-role booking, messaging, and payments infrastructure.",
+    link: null,
+  },
+  {
+    id: "vibespark",
+    name: "Vibespark",
+    status: "In Development",
+    description: "Real-time voice and video platform using WebRTC and sockets.",
+    link: null,
   },
 ];
-
