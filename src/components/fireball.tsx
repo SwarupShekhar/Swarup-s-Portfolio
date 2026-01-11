@@ -23,6 +23,19 @@ export function FireBall({
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMouseInside, setIsMouseInside] = useState(false);
 
+  // Use refs to access latest values in animation loop without restarting it
+  const stateRef = useRef({
+    followMouse,
+    intensity,
+    isMouseInside,
+    mousePosition
+  });
+
+  // Update refs when props/state change
+  useEffect(() => {
+    stateRef.current = { followMouse, intensity, isMouseInside, mousePosition };
+  }, [followMouse, intensity, isMouseInside, mousePosition]);
+
   useEffect(() => {
     const container = containerRef?.current || (blobRef.current?.parentElement);
     if (!container) return;
@@ -32,13 +45,13 @@ export function FireBall({
         const rect = container.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
-        
+
         const mouseX = e.clientX - centerX;
         const mouseY = e.clientY - centerY;
-        
+
         setMousePosition({
-          x: mouseX * intensity,
-          y: mouseY * intensity
+          x: mouseX, // Store raw position, apply intensity in loop
+          y: mouseY
         });
       }
     };
@@ -49,11 +62,9 @@ export function FireBall({
 
     const handleMouseLeave = () => {
       setIsMouseInside(false);
-      // Reset position when mouse leaves
       setMousePosition({ x: 0, y: 0 });
     };
 
-    // Add event listeners to the container
     container.addEventListener("mousemove", handleMouseMove);
     container.addEventListener("mouseenter", handleMouseEnter);
     container.addEventListener("mouseleave", handleMouseLeave);
@@ -61,33 +72,31 @@ export function FireBall({
     let animationFrame: number;
 
     const animate = () => {
-      if (blobRef.current && followMouse) {
+      if (blobRef.current) {
         const blob = blobRef.current;
-        
-        // Calculate position based on mouse position and automatic animation
-        let x, y;
-        if (isMouseInside) {
-          x = mousePosition.x;
-          y = mousePosition.y;
+        const state = stateRef.current;
+
+        if (state.followMouse) {
+          let x, y;
+          if (state.isMouseInside) {
+            // Apply intensity here
+            x = state.mousePosition.x * state.intensity;
+            y = state.mousePosition.y * state.intensity;
+          } else {
+            x = Math.sin(Date.now() / 2000) * 30;
+            y = Math.cos(Date.now() / 2000) * 30;
+          }
+
+          const scale = 1 + Math.sin(Date.now() / 3000) * 0.1;
+          blob.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
         } else {
-          // Fallback to original animation when mouse is outside
-          x = Math.sin(Date.now() / 2000) * 30;
-          y = Math.cos(Date.now() / 2000) * 30;
+          const x = Math.sin(Date.now() / 2000) * 50;
+          const y = Math.cos(Date.now() / 2000) * 50;
+          const scale = 1 + Math.sin(Date.now() / 3000) * 0.1;
+          blobRef.current.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
         }
-        
-        // Add subtle pulsating effect
-        const scale = 1 + Math.sin(Date.now() / 3000) * 0.1;
-
-        blob.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
-      } else if (blobRef.current) {
-        // Original animation for when followMouse is false
-        const x = Math.sin(Date.now() / 2000) * 50;
-        const y = Math.cos(Date.now() / 2000) * 50;
-        const scale = 1 + Math.sin(Date.now() / 3000) * 0.1;
-
-        blobRef.current.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
       }
-      
+
       animationFrame = requestAnimationFrame(animate);
     };
 
@@ -103,7 +112,7 @@ export function FireBall({
         cancelAnimationFrame(animationFrame);
       }
     };
-  }, [followMouse, intensity, isMouseInside, mousePosition]);
+  }, [containerRef]); // Only re-run if container changes
 
   return (
     <div
