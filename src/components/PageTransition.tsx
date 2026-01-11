@@ -9,6 +9,11 @@ export default function PageTransition({ children }: { children: ReactNode }) {
 
     // Scroll to top on route change
     useEffect(() => {
+        // Disable browser's default scroll restoration
+        if (typeof window !== 'undefined' && window.history) {
+            window.history.scrollRestoration = 'manual';
+        }
+
         window.scrollTo(0, 0);
     }, [pathname]);
 
