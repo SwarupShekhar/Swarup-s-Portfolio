@@ -2,7 +2,7 @@
 
 import { studio } from "@/content/studio";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function StudioPage() {
   const [filter, setFilter] = useState<"all" | "professional" | "independent">("all");
@@ -18,9 +18,17 @@ export default function StudioPage() {
     { id: "independent", label: "Independent Labs" },
   ];
 
+  // Failsafe for visibility
+  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    setIsVisible(true);
+    // Force visibility after a short delay if navigation gets stuck
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <main className="relative min-h-[100dvh] bg-black flex flex-col items-center justify-start pt-20 pb-24 px-6">
-
       {/* 2. DATA FIELD BACKGROUND */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Deep neural gradient */}
@@ -34,6 +42,8 @@ export default function StudioPage() {
 
       <div className="relative z-10 max-w-6xl w-full flex flex-col items-center">
         <motion.div
+          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 20 }}
           className="text-center mb-12"
         >
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6">
@@ -124,8 +134,7 @@ function SystemCard({ project, index }: { project: Project, index: number }) {
   const CardContent = (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
+      animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

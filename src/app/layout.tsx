@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { WindSong } from "next/font/google";
 import Nav from "@/components/Nav";
 import PageTransition from "@/components/PageTransition";
+import ScrollRestoration from "@/components/ScrollRestoration";
 import PremiumBackground from "@/components/PremiumBackground";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className={`${windSong.variable} bg-black text-white`}>
+        <ScrollRestoration />
         <PremiumBackground />
         <Nav />
         <PageTransition>{children}</PageTransition>
