@@ -59,7 +59,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen bg-black overflow-hidden flex flex-col items-center justify-start pt-32 pb-20">
+    <main className="relative min-h-screen bg-black overflow-hidden flex flex-col items-center justify-start pt-24 md:pt-32 pb-20">
       {/* CORE ENGINE */}
       <div ref={containerRef} className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <FireBall
@@ -108,7 +108,7 @@ export default function Home() {
 
         {/* Main Title - Split/Staggered */}
         <div className="mb-8">
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-white leading-[1.1]">
+          <h1 className="text-4xl md:text-8xl font-bold tracking-tighter text-white leading-[1.1]">
             <span className="block">I design and engineer</span>
             <motion.span
               initial={{ backgroundPosition: "0% 50%", opacity: 0 }}

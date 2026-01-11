@@ -19,7 +19,7 @@ export default function StudioPage() {
   ];
 
   return (
-    <main className="relative min-h-screen bg-black overflow-hidden flex flex-col items-center pt-32 pb-24 px-6">
+    <main className="relative min-h-screen bg-black flex flex-col items-center pt-24 md:pt-32 pb-24 px-6">
 
       {/* 2. DATA FIELD BACKGROUND */}
       <div className="absolute inset-0 pointer-events-none">
@@ -34,9 +34,6 @@ export default function StudioPage() {
 
       <div className="relative z-10 max-w-6xl w-full flex flex-col items-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6">

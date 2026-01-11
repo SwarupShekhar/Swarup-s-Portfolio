@@ -5,7 +5,7 @@ import SystemBlock from "@/components/SystemBlock";
 
 export default function About() {
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-32 max-w-6xl mx-auto">
+    <main className="min-h-screen bg-black text-white px-6 py-20 md:py-32 max-w-6xl mx-auto">
 
       {/* Header */}
       <motion.div
@@ -13,7 +13,7 @@ export default function About() {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-3xl"
       >
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter">
+        <h1 className="text-4xl md:text-7xl font-bold tracking-tighter">
           Orchestrator’s Toolkit
         </h1>
         <p className="mt-6 text-xl text-white/50">
