@@ -5,6 +5,7 @@ import { WindSong } from "next/font/google";
 import Nav from "@/components/Nav";
 import PageTransition from "@/components/PageTransition";
 import PremiumBackground from "@/components/PremiumBackground";
+import { Analytics } from "@vercel/analytics/react";
 
 const windSong = WindSong({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <PremiumBackground />
         <Nav />
         <PageTransition>{children}</PageTransition>
+        <Analytics />
       </body>
     </html>
   );
