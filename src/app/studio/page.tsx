@@ -19,7 +19,7 @@ export default function StudioPage() {
   ];
 
   return (
-    <main className="relative min-h-screen bg-black flex flex-col items-center justify-start pt-24 md:pt-32 pb-24 px-6">
+    <main className="relative min-h-screen bg-black flex flex-col items-center justify-start pt-20 pb-24 px-6">
 
       {/* 2. DATA FIELD BACKGROUND */}
       <div className="absolute inset-0 pointer-events-none">
@@ -45,7 +45,7 @@ export default function StudioPage() {
         </motion.div>
 
         {/* 3. FILTER CONTROLS */}
-        <div className="flex flex-wrap justify-center gap-4 mb-20 p-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+        <div className="flex flex-wrap justify-center gap-4 mb-12 p-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
           {tabs.map((tab) => (
             <button
               key={tab.id}
