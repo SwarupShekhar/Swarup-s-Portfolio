@@ -130,7 +130,7 @@ export default function Home() {
       {/* --- LAYER 2: SYSTEM CORE --- */}
       <motion.div
         style={{ y: fireballY }}
-        className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden"
+        className="fixed -inset-[50vh] w-[200vw] h-[200vh] z-0 flex items-center justify-center pointer-events-none"
       >
         {/* Chromatic Aberration Wrapper */}
         <div className="relative">
@@ -344,8 +344,8 @@ function Scene1({ smoothScroll }: { smoothScroll: any }) {
 
   return (
     <motion.div
-      style={{ opacity, y, filter }}
-      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+      style={{ opacity, y, filter, pointerEvents: useTransform(smoothScroll, (v: any) => v < 0.28 ? "auto" : "none") }}
+      className="absolute inset-0 flex items-center justify-center"
     >
       <div className="pointer-events-auto h-screen flex flex-col items-center justify-center text-center px-4">
         <motion.h1
@@ -384,8 +384,8 @@ function Scene4({ smoothScroll }: { smoothScroll: any }) {
 
   return (
     <motion.div
-      style={{ opacity, scale, y }}
-      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+      style={{ opacity, scale, y, pointerEvents: useTransform(smoothScroll, (v: any) => (v > 0.55 && v < 0.88) ? "auto" : "none") }}
+      className="absolute inset-0 flex items-center justify-center"
     >
       <div className="pointer-events-auto h-screen w-full flex flex-col items-center justify-center text-center px-4 relative">
 
@@ -474,8 +474,8 @@ function Scene({
 
   return (
     <motion.div
-      style={{ opacity, y, filter, scale }}
-      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+      style={{ opacity, y, filter, scale, pointerEvents: useTransform(smoothScroll, (v: any) => (v > start && v < end) ? "auto" : "none") }}
+      className="absolute inset-0 flex items-center justify-center"
     >
       <div className="pointer-events-auto">
         {children}
@@ -610,12 +610,12 @@ function ScrollToTop() {
   return (
     <button
       onClick={scrollToTop}
-      className="group flex flex-col items-center gap-2 text-white/20 hover:text-emerald-400 transition-colors duration-500 pb-12 cursor-pointer pointer-events-auto"
+      className="group flex flex-col items-center gap-2 text-white/50 hover:text-emerald-400 transition-colors duration-500 pb-12 cursor-pointer pointer-events-auto animate-pulse hover:animate-none"
     >
-      <div className="p-3 rounded-full border border-white/10 group-hover:border-emerald-500/50 transition-colors">
-        <ChevronUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
+      <div className="p-4 rounded-full border border-emerald-500/30 bg-emerald-500/5 shadow-[0_0_20px_rgba(16,185,129,0.2)] group-hover:border-emerald-500/80 group-hover:shadow-[0_0_40px_rgba(16,185,129,0.4)] transition-all">
+        <ChevronUp className="w-6 h-6 group-hover:-translate-y-1 transition-transform text-emerald-400" />
       </div>
-      <span className="text-[10px] uppercase tracking-widest font-mono">Return to Orbit</span>
+      <span className="text-xs uppercase tracking-[0.2em] font-mono text-emerald-400/80">Return to Orbit</span>
     </button>
   );
 }
