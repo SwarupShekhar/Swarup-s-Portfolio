@@ -117,7 +117,7 @@ export function FireBall({
   return (
     <div
       ref={blobRef}
-      className="relative w-[700px] h-[700px] rounded-full opacity-80"
+      className="relative w-[350px] h-[350px] md:w-[700px] md:h-[700px] rounded-full opacity-80"
       style={{
         background: `radial-gradient(circle at 30% 30%, ${colors[0]}, ${colors[1]} 40%, transparent 75%)`,
         filter: `blur(${blobRadius * 6}px)`,

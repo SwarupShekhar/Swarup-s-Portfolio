@@ -349,7 +349,7 @@ function Scene1({ smoothScroll }: { smoothScroll: any }) {
     >
       <div className="pointer-events-auto h-screen flex flex-col items-center justify-center text-center px-4">
         <motion.h1
-          className="text-8xl md:text-[10rem] text-white/90 leading-none mb-6"
+          className="text-6xl md:text-[10rem] text-white/90 leading-none mb-6"
           style={{ fontFamily: "var(--font-windsong)" }}
         >
           <ScrambleText text="Swarup Shekhar" />
@@ -404,7 +404,7 @@ function Scene4({ smoothScroll }: { smoothScroll: any }) {
         </p>
 
         {/* System Map Visualization - Labels fade in */}
-        <div className="grid grid-cols-2 gap-x-12 gap-y-4 text-left font-mono text-sm opacity-80 max-w-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-left font-mono text-sm opacity-80 max-w-4xl w-full">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex justify-between border-b border-white/10 pb-2">
             <span className="text-white">Englivo</span>
             <span className="text-white/40">Fluency & Learning Intelligence</span>
