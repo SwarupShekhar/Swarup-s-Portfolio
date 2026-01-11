@@ -19,7 +19,7 @@ export default function StudioPage() {
   ];
 
   return (
-    <main className="relative min-h-screen bg-black flex flex-col items-center pt-24 md:pt-32 pb-24 px-6">
+    <main className="relative min-h-screen bg-black flex flex-col items-center justify-start pt-24 md:pt-32 pb-24 px-6">
 
       {/* 2. DATA FIELD BACKGROUND */}
       <div className="absolute inset-0 pointer-events-none">
