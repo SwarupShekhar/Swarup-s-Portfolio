@@ -67,8 +67,8 @@ export function GalaxyField() {
                     originY,
                     gridX,
                     gridY,
-                    size: Math.random() * 1.5 + 0.5,
-                    opacity: Math.random() * 0.5 + 0.1,
+                    size: Math.random() * (width < 768 ? 2.5 : 1.5) + 0.5, // Larger stars for mobile clarity
+                    opacity: Math.random() * 0.5 + 0.3, // Brighter stars
                     twinklePhase: Math.random() * Math.PI * 2,
                     twinkleSpeed: 0.02 + Math.random() * 0.03
                 });
@@ -156,9 +156,16 @@ export function GalaxyField() {
             animationFrameId = requestAnimationFrame(render);
         };
 
-        render();
+        // Delay start to unblock main thread
+        const timeoutId = setTimeout(() => {
+            handleResize();
+            window.addEventListener("resize", handleResize);
+            window.addEventListener("scroll", handleScroll);
+            render();
+        }, 100);
 
         return () => {
+            clearTimeout(timeoutId);
             window.removeEventListener("resize", handleResize);
             window.removeEventListener("scroll", handleScroll);
             cancelAnimationFrame(animationFrameId);

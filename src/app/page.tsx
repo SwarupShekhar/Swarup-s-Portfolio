@@ -325,12 +325,11 @@ function Scene1({ smoothScroll }: { smoothScroll: any }) {
         style={{ pointerEvents: useTransform(smoothScroll, (v: any) => v < 0.28 ? "auto" : "none") }}
         className="h-screen flex flex-col items-center justify-center text-center px-4"
       >
-        {/* RESTORED NAME */}
         <motion.h1
           className="text-6xl md:text-[8rem] text-white/90 leading-none mb-2"
           style={{ fontFamily: "var(--font-windsong)" }}
         >
-          <ScrambleText text="Swarup Shekhar" />
+          Swarup Shekhar
         </motion.h1>
 
         <p className="text-emerald-400 uppercase tracking-[0.2em] text-sm md:text-base font-mono mb-8">
@@ -450,14 +449,17 @@ function Scene({
   const filter = useTransform(
     smoothScroll,
     [start, start + entryDuration, end - exitDuration, end],
-    isMobile
-      ? ["blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"]
-      : ["blur(12px)", "blur(0px)", "blur(0px)", fadeOut ? "blur(12px)" : "blur(0px)"]
+    ["blur(12px)", "blur(0px)", "blur(0px)", fadeOut ? "blur(12px)" : "blur(0px)"]
   );
 
   return (
     <motion.div
-      style={{ opacity, y, filter, scale }}
+      style={{
+        opacity,
+        y,
+        scale,
+        filter: isMobile ? "none" : filter // Apply conditionally here
+      }}
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
     >
       <motion.div
