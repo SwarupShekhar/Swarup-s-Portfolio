@@ -28,13 +28,9 @@ export default function Nav() {
         rounded-2xl px-6 md:px-8 py-3 flex items-center justify-between gap-10 shadow-lg
         w-[90%] max-w-5xl"
       >
-        <div className="flex items-center gap-2 text-sm text-white/80">
+        <Link href="/" className="group flex items-center gap-2">
           <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-          <span className="hidden md:inline">Core Online</span>
-        </div>
-
-        <Link href="/" className="absolute left-1/2 -translate-x-1/2 group">
-          <div className={`${imperialScript.className} text-3xl md:text-3xl relative cursor-pointer`}>
+          <div className={`${imperialScript.className} text-3xl relative cursor-pointer`}>
             {/* Outline / Stroke Layer */}
             <span
               className="relative z-10 block"
@@ -68,6 +64,12 @@ export default function Nav() {
             </Link>
             <Link href="/englivo" className="hover:text-white transition">
               Englivo
+            </Link>
+            <Link href="/wehostt" className="hover:text-white transition">
+              WeHostt
+            </Link>
+            <Link href="/vibespark" className="hover:text-white transition">
+              VibeSpark
             </Link>
             <Link href="/about" className="hover:text-white transition">
               About
@@ -119,6 +121,12 @@ export default function Nav() {
               </Link>
               <Link href="/englivo" onClick={() => setIsOpen(false)} className="hover:text-white transition">
                 Englivo
+              </Link>
+              <Link href="/wehostt" onClick={() => setIsOpen(false)} className="hover:text-white transition">
+                WeHostt
+              </Link>
+              <Link href="/vibespark" onClick={() => setIsOpen(false)} className="hover:text-white transition">
+                VibeSpark
               </Link>
               <Link href="/about" onClick={() => setIsOpen(false)} className="hover:text-white transition">
                 About

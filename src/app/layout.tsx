@@ -6,6 +6,7 @@ import Nav from "@/components/Nav";
 import PageTransition from "@/components/PageTransition";
 import ScrollRestoration from "@/components/ScrollRestoration";
 import PremiumBackground from "@/components/PremiumBackground";
+import Footer from "@/components/Footer";
 import { Analytics } from "@vercel/analytics/react";
 
 const windSong = WindSong({
@@ -15,7 +16,7 @@ const windSong = WindSong({
 });
 
 export const metadata: Metadata = {
-  title: "Swarup — Product Engineer & Orchestrator",
+  title: "Swarup - Product Engineer & Orchestrator",
   description:
     "Product Studio showcasing AI systems, marketplaces, and SaaS platforms",
 };
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <PremiumBackground />
         <Nav />
         <PageTransition>{children}</PageTransition>
+        <Footer />
         <Analytics />
       </body>
     </html>

@@ -1,82 +1,135 @@
 "use client";
 
+import { wehostt } from "@/content/wehostt";
+import IntelligenceField from "@/components/IntelligenceField";
 import { motion } from "framer-motion";
 
 export default function WeHosttPage() {
     return (
-        <main className="max-w-6xl mx-auto py-32 px-6 space-y-28">
+        <main className="max-w-4xl mx-auto pt-32 md:pt-40 pb-20 px-6 space-y-28">
             {/* HERO */}
             <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
+                className="relative text-center"
             >
+                <div className="absolute inset-0 -top-40 -z-10 flex items-center justify-center opacity-20 pointer-events-none">
+                    <IntelligenceField />
+                </div>
+
                 <p className="text-sm font-medium tracking-wide text-indigo-500 uppercase">
                     Revenue SaaS
                 </p>
-                <h1 className="mt-3 text-5xl font-semibold leading-tight tracking-tight">
+                <h1 className="mt-3 text-5xl md:text-6xl font-semibold leading-tight tracking-tight">
                     WeHostt
                 </h1>
                 <p className="mt-4 text-xs font-mono uppercase tracking-widest text-emerald-400/80">
                     Product Engineer • Vaidik Eduservices
                 </p>
-                <p className="mt-6 text-lg text-white/60 leading-relaxed max-w-2xl">
-                    Vertical SaaS designed for hospitality lead capture. It routes client inquiries directly into a revenue-generating workflow, bypassing the complexity of generic CRMs.
+                <p className="mt-6 text-xl text-white/60 leading-relaxed max-w-2xl mx-auto">
+                    {wehostt.subtitle}
                 </p>
             </motion.section>
 
-            {/* COMPETITIVE SYNTHESIS */}
-            <section className="max-w-5xl mx-auto w-full">
-                <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-3xl font-bold tracking-tight mb-8"
-                >
-                    Competitive Synthesis
-                </motion.h2>
-
-                <div className="grid md:grid-cols-3 gap-6">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-colors"
-                    >
-                        <p className="text-white/70 font-semibold">Generic CRMs</p>
-                        <p className="mt-2 text-white/40 text-sm">
-                            Powerful but complex, not designed for hospitality workflows or rapid lead conversion.
-                        </p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2 }}
-                        className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-colors"
-                    >
-                        <p className="text-white/70 font-semibold">Website Forms</p>
-                        <p className="mt-2 text-white/40 text-sm">
-                            Simple but blind. Leads arrive without qualification, routing, or follow-up automation.
-                        </p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.3 }}
-                        className="p-6 rounded-2xl border border-emerald-400/40 bg-emerald-400/5 hover:bg-emerald-400/10 transition-colors"
-                    >
-                        <p className="text-emerald-400 font-semibold">WeHostt</p>
-                        <p className="mt-2 text-white/70 text-sm">
-                            A vertical SaaS that captures, qualifies, and routes hospitality leads directly into revenue-generating workflows.
-                        </p>
-                    </motion.div>
+            {/* PHASE 1: CONCEPT VALIDATION */}
+            <motion.section
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6 }}
+                className="bg-white/5 border border-white/10 rounded-2xl p-8 md:p-12"
+            >
+                <h2 className="text-3xl font-semibold tracking-tight text-white mb-8">
+                    {wehostt.phase1.title}
+                </h2>
+                <div className="space-y-8">
+                    {wehostt.phase1.points.map((point, i) => (
+                        <div key={i} className="flex flex-col gap-2">
+                            <span className="text-indigo-400 font-bold tracking-wide text-lg">{point.bold}</span>
+                            <p className="text-white/70 leading-relaxed text-lg">{point.text}</p>
+                        </div>
+                    ))}
                 </div>
-            </section>
+            </motion.section>
+
+            {/* PHASE 2: STRATEGY */}
+            <motion.section
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6 }}
+            >
+                <div className="max-w-3xl">
+                    <h2 className="text-3xl font-semibold tracking-tight text-white mb-8">
+                        {wehostt.phase2.title}
+                    </h2>
+                    <div className="space-y-8 border-l-2 border-indigo-500/30 pl-8">
+                        {wehostt.phase2.points.map((point, i) => (
+                            <div key={i} className="flex flex-col gap-1">
+                                <span className="text-indigo-400 font-bold tracking-wide text-lg">{point.bold}</span>
+                                <p className="text-white/70 leading-relaxed">{point.text}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </motion.section>
+
+            {/* PHASE 3: EXECUTION */}
+            <motion.section
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6 }}
+                className="grid md:grid-cols-2 gap-12"
+            >
+                <div>
+                    <h2 className="text-3xl font-semibold tracking-tight text-white mb-8">
+                        {wehostt.phase3.title}
+                    </h2>
+                    <div className="space-y-6">
+                        {wehostt.phase3.points.map((point, i) => (
+                            <div key={i} className="flex flex-col gap-1">
+                                <span className="text-indigo-400 font-bold tracking-wide text-lg">{point.bold}</span>
+                                <p className="text-white/70 leading-relaxed">{point.text}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className="flex items-center justify-center p-8 rounded-2xl bg-white/[0.02] border border-white/5">
+                    <div className="text-center space-y-4 opacity-50">
+                        <div className="text-6xl mb-4">⚙️</div>
+                        <p className="text-sm font-mono text-white/40 uppercase tracking-widest">System Architecture</p>
+                        <div className="flex gap-2 justify-center text-xs font-mono text-white/30">
+                            <span>HTML5</span> • <span>CSS3</span> • <span>Python Automation</span>
+                        </div>
+                    </div>
+                </div>
+            </motion.section>
+
+            {/* PHASE 4: OUTCOMES */}
+            <motion.section
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6 }}
+                className="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-8 md:p-12 relative overflow-hidden"
+            >
+                <div className="absolute top-0 right-0 p-32 bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none" />
+
+                <h2 className="text-3xl font-semibold tracking-tight text-white mb-8 relative z-10">
+                    {wehostt.phase4.title}
+                </h2>
+
+                <div className="grid gap-8 relative z-10">
+                    {wehostt.phase4.points.map((point, i) => (
+                        <div key={i} className="flex flex-col gap-2">
+                            <span className="text-emerald-400 font-bold tracking-wide text-xl">{point.bold}</span>
+                            <p className="text-white/70 leading-relaxed text-lg">{point.text}</p>
+                        </div>
+                    ))}
+                </div>
+            </motion.section>
         </main>
     );
 }

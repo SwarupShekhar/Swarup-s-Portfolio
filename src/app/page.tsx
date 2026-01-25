@@ -1,12 +1,13 @@
 "use client";
 
 import { useScroll, useTransform, useSpring, useMotionTemplate, motion, useMotionValue } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { FireBall } from "@/components/fireball";
 import { ParticleCircle } from "@/components/particle-circle";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { GalaxyField } from "@/components/GalaxyField";
+import { KineticStat } from "@/components/KineticStat";
 import { ArrowRight, Lock, CheckCircle2, ChevronUp } from "lucide-react";
 
 export default function Home() {
@@ -18,12 +19,11 @@ export default function Home() {
 
   // --- 1. MICRO-LAG (Smooth Scroll) ---
   const smoothScroll = useSpring(scrollYProgress, {
-    stiffness: 60,
+    stiffness: 90,
     damping: 20,
-    mass: 0.4
+    mass: 0.5
   });
 
-  // --- PARALLAX LAYERS (Using smoothScroll) ---
   // --- PARALLAX LAYERS (Using smoothScroll) ---
   // Clamp parallax at end (0.8) for "Lock-in" effect
   const bgY = useTransform(smoothScroll, [0, 0.8, 1], ["0%", "-20%", "-20%"]);
@@ -106,15 +106,15 @@ export default function Home() {
       {/* --- LAYER 0: GALAXY ENGINE --- */}
       <motion.div
         style={{ y: galaxyY, opacity: galaxyOpacity }}
-        className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden"
+        className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden will-change-transform"
       >
         <GalaxyField />
       </motion.div>
 
       {/* --- LAYER 1: BACKGROUND --- */}
-      <motion.div style={{ y: bgY }} className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
-        {/* 3. AMBIENT NOISE OVERLAY */}
-        <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay z-50 pointer-events-none bg-noise"
+      <motion.div style={{ y: bgY }} className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden will-change-transform">
+        {/* 3. AMBIENT NOISE OVERLAY - Hid on mobile for performance */}
+        <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay z-50 pointer-events-none bg-noise hidden md:block"
           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
         />
         {/* 4. LIGHT SWEEP */}
@@ -130,7 +130,7 @@ export default function Home() {
       {/* --- LAYER 2: SYSTEM CORE --- */}
       <motion.div
         style={{ y: fireballY }}
-        className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none"
+        className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none will-change-transform"
       >
         {/* Chromatic Aberration Wrapper */}
         <div className="relative">
@@ -192,30 +192,23 @@ export default function Home() {
         <Scene range={[0.25, 0.48]} smoothScroll={smoothScroll} overlap>
           <div className="h-screen flex flex-col items-center justify-center text-center px-4">
             <p className="text-violet-400 uppercase tracking-[0.2em] text-sm font-mono mb-6">
-              <ScrambleText text="Origin · Market Intelligence" />
+              <ScrambleText text="Analyst · Market Intelligence" />
             </p>
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tighter max-w-4xl">
-              From Research to <br />
-              <span className="text-white/40">Real Decisions</span>
+              Uncovering Validated <br />
+              <span className="text-white/40">Market Needs</span>
             </h2>
-            <p className="text-xl md:text-2xl text-white/70 font-light mb-8 max-w-2xl">
-              Analyzed large-scale market signals before writing a single line of code.
+            <p className="text-xl md:text-2xl text-white/70 font-light mb-8 max-w-3xl">
+              Grounded in deep market research to identify high-impact opportunities.
             </p>
 
-            <div className="flex flex-col gap-3 text-lg text-white/60 font-light items-center">
-              <div className="flex items-center gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
-                <p>Market trend analysis across education & services</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
-                <p>Direct interviews with operators & end users</p>
+            <div className="flex flex-col gap-12 text-left w-full max-w-4xl mt-12">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <KineticStat value="20+" label="Global Expert Interviews" />
+                <KineticStat value="5,000+" label="Data Points Scraped" />
+                <KineticStat value="50%" label="Outreach Efficiency Gain" />
               </div>
             </div>
-
-            <p className="text-white/30 text-sm font-mono mt-8">
-              Background: Market Research Analyst, Vaidik Eduservices
-            </p>
           </div>
         </Scene>
 
@@ -223,30 +216,17 @@ export default function Home() {
         <Scene range={[0.42, 0.6]} smoothScroll={smoothScroll} overlap>
           <div className="h-screen flex flex-col items-center justify-center text-center px-4">
             <p className="text-fuchsia-400 uppercase tracking-[0.2em] text-sm font-mono mb-6">
-              <ScrambleText text="Execution · Product Engineering" />
+              <ScrambleText text="Builder · Execution Engine" />
             </p>
             <h2 className="text-4xl md:text-6xl font-bold text-white max-w-4xl leading-tight mb-8">
-              From Insight to <br />
-              <span className="text-white/40">Working Software</span>
+              From Theory to <br />
+              <span className="text-white/40">Rapid Execution</span>
             </h2>
-            <p className="text-xl md:text-2xl text-white/70 max-w-2xl font-light mb-12">
-              I use AI-assisted development to rapidly convert validated ideas into real, usable platforms.
-            </p>
 
-            <div className="flex flex-col gap-3 text-lg text-white/60 font-light items-center">
-              <div className="flex items-center gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
-                <p>End-to-end architecture: frontend, backend, and data</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
-                <p>Built and deployed full systems without handoffs or delays</p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-3xl mt-8 text-left">
+              <KineticStat value="18%" label="Profit Margin Growth" />
+              <KineticStat value="100%" label="Full-Stack Ownership" />
             </div>
-
-            <p className="text-white/30 text-sm font-mono mt-8">
-              This is how Englivo, WeHostt, and Vaidik’s platforms were delivered.
-            </p>
           </div>
         </Scene>
 
@@ -254,28 +234,28 @@ export default function Home() {
         <Scene4 smoothScroll={smoothScroll} />
 
         {/* SCENE 5: PROOF (UPDATED) */}
-        <Scene range={[0.8, 1.0]} smoothScroll={smoothScroll}>
+        <Scene range={[0.8, 1.0]} smoothScroll={smoothScroll} fadeOut={false}>
           <div className="h-screen w-full flex flex-col items-center justify-center px-4 relative">
 
-            <div className="text-center mb-12">
-              <p className="text-emerald-400 uppercase tracking-[0.2em] text-xs font-mono mb-4">
+            <div className="text-center mb-6 md:mb-12">
+              <p className="text-emerald-400 uppercase tracking-[0.2em] text-xs font-mono mb-2 md:mb-4">
                 LIVE SYSTEMS
               </p>
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                Production-grade platforms in active use.
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-2 md:mb-4">
+                Production-grade platforms.
               </h2>
-              <p className="text-white/50 text-lg font-light">
-                Each system represents a different layer of digital infrastructure.
+              <p className="text-white/50 text-sm md:text-lg font-light">
+                Each system represents a different layer.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl w-full mb-16 px-4">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 max-w-7xl w-full mb-8 md:mb-16 px-2 md:px-4">
               <SystemPanel
                 title="Englivo"
                 status="Production"
                 desc="AI-powered fluency engine for natural English speaking."
                 tags={["Speech Analysis", "AI Feedback", "Learning UX"]}
-                href="https://naturalfluency.vercel.app"
+                href="https://englivo.com"
                 color="emerald"
               />
               <SystemPanel
@@ -305,14 +285,14 @@ export default function Home() {
               />
             </div>
 
-            <div className="flex flex-col items-center gap-6">
-              <p className="text-white/40 text-lg font-light italic">
+            <div className="flex flex-col items-center gap-4 md:gap-6">
+              <p className="text-white/40 text-sm md:text-lg font-light italic">
                 I build systems that outlast features.
               </p>
-              <div className="flex flex-col items-center gap-12">
+              <div className="flex flex-col items-center gap-6 md:gap-12">
                 <Link href="/studio">
-                  <button className="text-white/80 hover:text-emerald-400 transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group">
-                    Explore the System Map <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <button className="text-white/80 hover:text-emerald-400 transition-colors text-xs md:text-sm uppercase tracking-widest flex items-center gap-2 group">
+                    Explore the System Map <ArrowRight className="w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </Link>
 
@@ -323,12 +303,6 @@ export default function Home() {
         </Scene>
 
       </div>
-
-      {/* SCROLL AFFORDANCE */}
-      <ScrollAffordance />
-
-      {/* spacer to ensure we have scrollable area */}
-      <div className="h-[10vh]" />
     </main>
   );
 }
@@ -351,29 +325,31 @@ function Scene1({ smoothScroll }: { smoothScroll: any }) {
         style={{ pointerEvents: useTransform(smoothScroll, (v: any) => v < 0.28 ? "auto" : "none") }}
         className="h-screen flex flex-col items-center justify-center text-center px-4"
       >
+        {/* RESTORED NAME */}
         <motion.h1
-          className="text-6xl md:text-[10rem] text-white/90 leading-none mb-6"
+          className="text-6xl md:text-[8rem] text-white/90 leading-none mb-2"
           style={{ fontFamily: "var(--font-windsong)" }}
         >
           <ScrambleText text="Swarup Shekhar" />
         </motion.h1>
-        <div className="space-y-4">
-          <p className="text-emerald-400 uppercase tracking-[0.2em] text-sm md:text-base font-mono">
-            Product Engineer & Orchestrator
-          </p>
-          <p className="text-white/60 text-xl md:text-3xl max-w-2xl font-light leading-relaxed">
-            “I turn market intelligence into <span className="text-white font-normal">living software systems</span>”
-          </p>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2, duration: 1 }}
-            className="text-white/20 text-xs uppercase tracking-widest mt-12"
-          >
-            Scroll to explore the system
-          </motion.p>
-        </div>
+        <p className="text-emerald-400 uppercase tracking-[0.2em] text-sm md:text-base font-mono mb-8">
+          DATA · TO · MATTER
+        </p>
+        <motion.h2
+          className="text-2xl md:text-5xl font-bold text-white/80 leading-tight mb-8 max-w-5xl tracking-tighter"
+        >
+          I transform <span className="text-white/40">market noise</span> into <span className="text-emerald-400">product matter</span>.
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+          className="text-white/20 text-xs uppercase tracking-widest mt-12"
+        >
+          Scroll to initialize system
+        </motion.p>
       </motion.div>
     </motion.div>
   );
@@ -396,41 +372,32 @@ function Scene4({ smoothScroll }: { smoothScroll: any }) {
       >
 
         <p className="text-emerald-400 uppercase tracking-[0.2em] text-sm font-mono mb-8">
-          <ScrambleText text="Role: Product Orchestrator" />
+          <ScrambleText text="Orchestrator · Enterprise Connector" />
         </p>
 
         <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tighter z-10">
-          I don’t build apps.<br />
-          <span className="text-white/50">I design ecosystems.</span>
+          Syncing Business <br />
+          <span className="text-white/50">with Code</span>
         </h2>
 
-        <p className="text-xl md:text-2xl text-white/70 font-light mb-16 z-10 max-w-3xl">
-          Each system solves a different layer of the same problem:<br />
-          how people discover, learn, and transact online.
-        </p>
-
-        {/* System Map Visualization - Labels fade in */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-left font-mono text-sm opacity-80 max-w-4xl w-full">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex justify-between border-b border-white/10 pb-2">
-            <span className="text-white">Englivo</span>
-            <span className="text-white/40">Fluency & Learning Intelligence</span>
-          </motion.div>
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.2 }} className="flex justify-between border-b border-white/10 pb-2">
-            <span className="text-white">Vaidik</span>
-            <span className="text-white/40">Education & Student Operations</span>
-          </motion.div>
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.3 }} className="flex justify-between border-b border-white/10 pb-2">
-            <span className="text-white">WeHostt</span>
-            <span className="text-white/40">Revenue & Lead Systems</span>
-          </motion.div>
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.4 }} className="flex justify-between border-b border-white/10 pb-2">
-            <span className="text-white">Vibespark</span>
-            <span className="text-white/40">Real-Time Communication Lab</span>
-          </motion.div>
+        <div className="flex flex-col gap-4 text-base md:text-lg text-white/60 font-light items-start text-left max-w-4xl z-10">
+          <div className="flex items-start gap-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
+            <p><strong className="text-white/90">Enterprise Strategic Partnerships:</strong> Spearheaded engagement with leaders including <span className="text-emerald-400">TELUS International, Turing, Innodata, Centific, and Tech Mahindra</span>.</p>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
+            <p><strong className="text-white/90">Technical Requirement Synthesis:</strong> Analyzed enterprise-level AI requirements to present tailored service proposals.</p>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
+            <p><strong className="text-white/90">Global Market Expansion:</strong> Conducted interviews with 20+ global experts to bridge local intelligence with native trends.</p>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
+            <p><strong className="text-white/90">AI Service Integration:</strong> Analyzed 15+ specialized AI services (data annotation, fine-tuning) to execute high-impact growth.</p>
+          </div>
         </div>
-        <p className="text-emerald-400/50 text-xs font-mono mt-8">
-          Together, they form one operating model for digital businesses.
-        </p>
       </motion.div>
     </motion.div>
   );
@@ -440,12 +407,14 @@ function Scene({
   children,
   range,
   smoothScroll,
-  overlap = false
+  overlap = false,
+  fadeOut = true // New prop
 }: {
   children: React.ReactNode;
   range: [number, number];
   smoothScroll: any;
   overlap?: boolean;
+  fadeOut?: boolean;
 }) {
   const [start, end] = range;
   // Slower transitions: 0.15 duration instead of 0.1 -> Reverted to 0.05 to ensure clear window exists
@@ -455,13 +424,13 @@ function Scene({
   const opacity = useTransform(
     smoothScroll,
     [start, start + entryDuration, end - exitDuration, end],
-    [0, 1, 1, 0]
+    [0, 1, 1, fadeOut ? 0 : 1] // If fadeOut is false, stay at 1
   );
 
   const y = useTransform(
     smoothScroll,
     [start, start + entryDuration, end - exitDuration, end],
-    ["50px", "0px", "0px", "-50px"]
+    ["50px", "0px", "0px", fadeOut ? "-50px" : "0px"]
   );
 
   // Z-DEPTH & BLUR LOGIC
@@ -469,13 +438,21 @@ function Scene({
   const scale = useTransform(
     smoothScroll,
     [start, start + entryDuration, end - exitDuration, end],
-    [0.96, 1.0, 1.0, 1.05]
+    [0.96, 1.0, 1.0, fadeOut ? 1.05 : 1.0]
   );
+
+  // Optimize for mobile: Disable blur on small screens
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   const filter = useTransform(
     smoothScroll,
     [start, start + entryDuration, end - exitDuration, end],
-    ["blur(12px)", "blur(0px)", "blur(0px)", "blur(12px)"]
+    isMobile
+      ? ["blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"]
+      : ["blur(12px)", "blur(0px)", "blur(0px)", fadeOut ? "blur(12px)" : "blur(0px)"]
   );
 
   return (
@@ -484,7 +461,13 @@ function Scene({
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
     >
       <motion.div
-        style={{ pointerEvents: useTransform(smoothScroll, (v: any) => (v > start && v < end) ? "auto" : "none") }}
+        style={{
+          pointerEvents: useTransform(smoothScroll, (v: any) => {
+            // If fadeOut is false (it persists), allow pointer events all the way to the end (and beyond)
+            if (!fadeOut) return v > start ? "auto" : "none";
+            return (v > start && v < end) ? "auto" : "none"
+          })
+        }}
       >
         {children}
       </motion.div>
@@ -569,25 +552,45 @@ function SystemPanel({ title, status, desc, tags, href, color, disabled = false 
     >
       <Wrapper href={href} target={disabled ? undefined : "_blank"} className={`block h-full group ${disabled ? '' : 'cursor-pointer'}`}>
         <div className={`
-                  h-full p-6 rounded-xl border bg-black/40 backdrop-blur-md 
+                  relative overflow-hidden
+                  h-full p-3 md:p-6 rounded-xl border bg-black/40 backdrop-blur-md 
                   transition-all duration-500 ease-out flex flex-col justify-between
                   shadow-2xl
                   ${colors[color]}
               `}>
-          <div>
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="text-xl font-bold text-white">{title}</h3>
-              <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-full font-mono flex items-center gap-1.5 ${statusColors[color]}`}>
-                <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+
+          {/* GHOST LOGIC OVERLAY (X-RAY) */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0">
+            {/* Scanline */}
+            <div className="absolute top-0 bottom-0 left-[-100%] w-[20%] bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 animate-[scan_2s_ease-in-out_infinite]" />
+
+            {/* Tech Grid Background pattern */}
+            <div className="absolute inset-0 opacity-10"
+              style={{ backgroundImage: `radial-gradient(circle, ${statusColors[color].split(' ')[0].replace('text-', '') === 'emerald-400' ? '#34d399' : '#a78bfa'} 1px, transparent 1px)`, backgroundSize: '16px 16px' }}
+            />
+
+            {/* Architectural Lines */}
+            <svg className="absolute inset-0 w-full h-full opacity-20" preserveAspectRatio="none">
+              <path d="M0,0 L100,100" stroke="currentColor" strokeWidth="0.5" className={statusColors[color].split(' ')[0]} />
+              <path d="M100,0 L0,100" stroke="currentColor" strokeWidth="0.5" className={statusColors[color].split(' ')[0]} />
+              <rect x="10%" y="10%" width="80%" height="80%" fill="none" stroke="currentColor" strokeWidth="0.5" className={statusColors[color].split(' ')[0]} strokeDasharray="4 4" />
+            </svg>
+          </div>
+
+          <div className="relative z-10 bg-black/20 md:bg-transparent rounded-lg p-2 md:p-0">
+            <div className="flex justify-between items-start mb-2 md:mb-4">
+              <h3 className="text-sm md:text-xl font-bold text-white leading-tight">{title}</h3>
+              <span className={`text-[8px] md:text-[10px] uppercase tracking-wider px-1.5 py-0.5 md:px-2 md:py-1 rounded-full font-mono flex items-center gap-1 md:gap-1.5 ${statusColors[color]}`}>
+                <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-current animate-pulse" />
                 {status}
               </span>
             </div>
 
-            <p className="text-white/60 text-sm leading-relaxed mb-6 font-light">{desc}</p>
+            <p className="text-white/60 text-xs md:text-sm leading-snug md:leading-relaxed mb-4 md:mb-6 font-light line-clamp-3 md:line-clamp-none">{desc}</p>
 
             <div className="flex flex-wrap gap-2 mb-8">
               {tags.map(tag => (
-                <span key={tag} className="text-[10px] text-white/40 font-mono px-2 py-1 border border-white/5 rounded-md">
+                <span key={tag} className="text-[10px] text-white/40 font-mono px-2 py-1 border border-white/5 rounded-md group-hover:border-white/20 group-hover:text-white/60 transition-colors bg-black/40">
                   {tag}
                 </span>
               ))}
@@ -595,13 +598,13 @@ function SystemPanel({ title, status, desc, tags, href, color, disabled = false 
           </div>
 
           {!disabled && (
-            <div className="flex items-center text-xs text-white/40 group-hover:text-white transition-colors gap-2 uppercase tracking-widest">
-              View System <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+            <div className="relative z-10 flex items-center text-xs text-white/40 group-hover:text-white transition-colors gap-2 uppercase tracking-widest">
+              View Architecture <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </div>
           )}
           {disabled && (
-            <div className="flex items-center text-xs text-white/20 gap-2 uppercase tracking-widest font-mono">
-              <Lock className="w-3 h-3" /> Private R&D
+            <div className="relative z-10 flex items-center text-xs text-white/20 gap-2 uppercase tracking-widest font-mono">
+              <Lock className="w-3 h-3" /> Encrypted Lab
             </div>
           )}
         </div>
@@ -618,12 +621,12 @@ function ScrollToTop() {
   return (
     <button
       onClick={scrollToTop}
-      className="group flex flex-col items-center gap-2 text-white/50 hover:text-emerald-400 transition-colors duration-500 pb-12 cursor-pointer pointer-events-auto animate-pulse hover:animate-none scale-110"
+      className="group flex flex-col items-center gap-2 text-white/50 hover:text-emerald-400 transition-colors duration-500 pb-20 md:pb-12 cursor-pointer pointer-events-auto animate-pulse hover:animate-none scale-90 md:scale-110"
     >
-      <div className="p-4 rounded-full border border-emerald-500/60 bg-emerald-500/10 shadow-[0_0_30px_rgba(16,185,129,0.4)] group-hover:border-emerald-500 group-hover:shadow-[0_0_50px_rgba(16,185,129,0.6)] group-hover:bg-emerald-500/20 transition-all">
-        <ChevronUp className="w-6 h-6 group-hover:-translate-y-1 transition-transform text-emerald-400" />
+      <div className="p-3 md:p-4 rounded-full border border-emerald-500/60 bg-emerald-500/10 shadow-[0_0_30px_rgba(16,185,129,0.4)] group-hover:border-emerald-500 group-hover:shadow-[0_0_50px_rgba(16,185,129,0.6)] group-hover:bg-emerald-500/20 transition-all">
+        <ChevronUp className="w-5 h-5 md:w-6 md:h-6 group-hover:-translate-y-1 transition-transform text-emerald-400" />
       </div>
-      <span className="text-xs uppercase tracking-[0.2em] font-mono text-emerald-400/80">Return to Orbit</span>
+      <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] font-mono text-emerald-400/80">Return to Orbit</span>
     </button>
   );
 }

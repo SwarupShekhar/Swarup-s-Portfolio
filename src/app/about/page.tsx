@@ -1,203 +1,111 @@
 "use client";
 
 import { motion } from "framer-motion";
-import SystemBlock from "@/components/SystemBlock";
 
 export default function About() {
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-20 md:py-32 max-w-6xl mx-auto">
+    <main className="min-h-screen bg-black text-white px-6 py-32 md:py-48 max-w-5xl mx-auto">
 
-      {/* Header */}
+      {/* HEADER: MEMO */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-3xl"
+        className="mb-24"
       >
-        <h1 className="text-4xl md:text-7xl font-bold tracking-tighter">
-          Orchestrator’s Toolkit
+        <div className="flex items-center gap-4 mb-6">
+          <span className="h-px w-12 bg-emerald-500/50" />
+          <span className="text-emerald-500 font-mono text-xs uppercase tracking-widest">The Manifesto</span>
+        </div>
+        <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-tight max-w-3xl">
+          I don't just write code. <br />
+          <span className="text-white/40">I orchestrate outcome.</span>
         </h1>
-        <p className="mt-6 text-xl text-white/50">
-          The integrated systems I use to research, build, validate, and scale digital products.
-        </p>
       </motion.div>
 
-      {/* Systems */}
-      <div className="mt-24 space-y-32">
 
-        {/* Research */}
-        <SystemBlock
-          title="Market & Discovery"
-          color="emerald"
-          description="How I identify what to build and why."
-          tools={[
-            "Market research & competitor analysis",
-            "Stakeholder interviews & surveys",
-            "Data scraping & trend analysis",
-            "Pricing & expansion modeling",
-          ]}
-        />
-
-        {/* Build */}
-        <SystemBlock
-          title="Product & Engineering"
-          color="violet"
-          description="How I turn insight into working software."
-          tools={[
-            "Next.js, React, Tailwind",
-            "Node, Express, PostgreSQL",
-            "Authentication, APIs, Real-time systems",
-            "Framer Motion, UX systems",
-          ]}
-        />
-
-        {/* AI */}
-        <SystemBlock
-          title="AI Orchestration"
-          color="fuchsia"
-          description="How I integrate intelligence into products."
-          tools={[
-            "Prompt engineering & evaluation",
-            "Model QA & safety workflows",
-            "Audio & speech QA (ElevenLabs)",
-            "AI-powered feedback & automation",
-          ]}
-        />
-
-      </div>
-
-
-
-      {/* 1. THE TRAJECTORY */}
+      {/* SECTION 1: THE PHILOSOPHY */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.8 }}
-        className="mt-32 max-w-4xl"
+        className="grid md:grid-cols-2 gap-16 items-start"
       >
-        <h2 className="text-4xl font-bold tracking-tight">From Analyst to Product Architect</h2>
-        <p className="mt-8 text-lg text-white/60 leading-relaxed">
-          I did not start as a developer. I started inside markets, data, and user behavior.
-          <br /><br />
-          At Vaidik Eduservices and Testbook, I worked on market research, client acquisition, and AI training pipelines. I analyzed thousands of data points, interviewed stakeholders, and studied what actually moves revenue and learning outcomes.
-          <br /><br />
-          At some point I realized something dangerous. I could see what should be built, but I could not control how fast it was built.
-          <br /><br />
-          So I learned to build it myself.
-          <br /><br />
-          Today I design products the way an analyst designs strategy and the way an engineer builds systems.
-        </p>
-      </motion.section>
-
-      {/* 2. THE OPERATING SYSTEM */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
-        className="mt-32"
-      >
-        <h2 className="text-4xl font-bold tracking-tight">How I Approach Products</h2>
-
-        <div className="grid md:grid-cols-2 gap-10 mt-12">
-          {[
-            ["Start from signal", "I do not build on gut feeling. I start from data, patterns, and user friction."],
-            ["Design systems", "I map flows between users, data, and decisions before I write UI."],
-            ["Build for leverage", "AI is not a shortcut. It is a force multiplier for faster iteration."],
-            ["Optimize for reality", "Products must survive production, not demos."],
-          ].map(([title, desc], i) => (
-            <motion.div
-              key={title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="p-8 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/20 transition-colors"
-            >
-              <h3 className="text-xl font-bold">{title}</h3>
-              <p className="mt-4 text-white/60">{desc}</p>
-            </motion.div>
-          ))}
+        <div>
+          <h2 className="text-xl font-bold text-white mb-6">The "Orchestrator" Mindset</h2>
+          <p className="text-white/60 leading-relaxed text-lg">
+            We live in an era where writing code is becoming commoditized. The value has shifted from "knowing syntax" to "knowing what to build."
+            <br /><br />
+            I operate at the intersection of <strong>Product Strategy</strong> (The Why), <strong>Data Analysis</strong> (The Signal), and <strong>Full-Stack Engineering</strong> (The How).
+            <br /><br />
+            I don't wait for a PRD. I write it. I don't wait for designs. I prototype them. I don't wait for approval. I ship, measure, and iterate.
+          </p>
+        </div>
+        <div className="relative p-8 rounded-2xl bg-white/5 border border-white/10">
+          <div className="space-y-6 font-mono text-sm">
+            <div className="flex justify-between items-center border-b border-white/10 pb-4">
+              <span className="text-white/40">Role</span>
+              <span className="text-emerald-400">Product Engineer</span>
+            </div>
+            <div className="flex justify-between items-center border-b border-white/10 pb-4">
+              <span className="text-white/40">Focus</span>
+              <span className="text-white">0 → 1 Systems</span>
+            </div>
+            <div className="flex justify-between items-center border-b border-white/10 pb-4">
+              <span className="text-white/40">Superpower</span>
+              <span className="text-white">Velocity & Empathy</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-white/40">Stack</span>
+              <span className="text-white">Next.js • Python • AI</span>
+            </div>
+          </div>
         </div>
       </motion.section>
 
-      {/* 3. ROLES QUADRANT */}
+      {/* SECTION 2: THE TIMELINE */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.8 }}
-        className="mt-32"
+        className="mt-40"
       >
-        <h2 className="text-4xl font-bold tracking-tight">How I Operate</h2>
+        <h2 className="text-4xl font-bold text-white mb-16">The Trajectory</h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
-          {[
-            ["Analyst", "Market research, pricing, positioning"],
-            ["Architect", "Data models, system flows, APIs"],
-            ["Engineer", "Frontend, backend, infrastructure"],
-            ["Designer", "UX, interaction, premium feel"],
-          ].map(([title, desc], i) => (
-            <motion.div
-              key={title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="p-6 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-colors"
-            >
-              <p className="text-lg font-bold">{title}</p>
-              <p className="mt-2 text-white/50 text-sm">{desc}</p>
-            </motion.div>
-          ))}
+        <div className="border-l border-white/10 pl-8 space-y-20 relative">
+
+          {/* ITEM 1 */}
+          <div className="relative">
+            <span className="absolute -left-[37px] top-2 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-black" />
+            <span className="text-emerald-500 font-mono text-xs uppercase tracking-widest mb-2 block">Present</span>
+            <h3 className="text-2xl font-bold text-white">Swarup's Product Studio</h3>
+            <p className="mt-4 text-white/60 max-w-xl">
+              Building and launching independent AI systems like <strong>Englivo</strong> and <strong>VibeSpark</strong>. Consulting for enterprise clients on R&D initiatives.
+            </p>
+          </div>
+
+          {/* ITEM 2 */}
+          <div className="relative">
+            <span className="absolute -left-[37px] top-2 w-4 h-4 rounded-full bg-white/20 ring-4 ring-black" />
+            <span className="text-white/40 font-mono text-xs uppercase tracking-widest mb-2 block">2022 - 2024</span>
+            <h3 className="text-2xl font-bold text-white">Vaidik Eduservices</h3>
+            <p className="mt-4 text-white/60 max-w-xl">
+              Led product engineering initiatives. Managed AI data pipelines for clients like TELUS and Tech Mahindra. Annotated 500+ prompts for safety and alignment.
+            </p>
+          </div>
+
+          {/* ITEM 3 */}
+          <div className="relative">
+            <span className="absolute -left-[37px] top-2 w-4 h-4 rounded-full bg-white/20 ring-4 ring-black" />
+            <span className="text-white/40 font-mono text-xs uppercase tracking-widest mb-2 block">2020 - 2022</span>
+            <h3 className="text-2xl font-bold text-white">Market Analysis</h3>
+            <p className="mt-4 text-white/60 max-w-xl">
+              Started in specific market research. Learned to identify "Lead Leakage" and user friction points before ever writing a line of code.
+            </p>
+          </div>
+
         </div>
-      </motion.section>
-
-      {/* 4. THE TRUST LAYER */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
-        className="mt-32"
-      >
-        <h2 className="text-4xl font-bold tracking-tight">Proof of Seriousness</h2>
-
-        <ul className="mt-10 space-y-4 text-white/60 text-lg">
-          <li>• Built AI training pipelines and QA systems</li>
-          <li>• Worked on 20+ AI annotation and evaluation projects</li>
-          <li>• Designed and shipped EdTech, SaaS, and marketplace platforms</li>
-          <li>• Deployed multiple production systems used by real users</li>
-        </ul>
-      </motion.section>
-
-      {/* 5. THE INTENT LAYER */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
-        className="mt-40 max-w-4xl"
-      >
-        <h2 className="text-4xl font-bold tracking-tight">
-          What I’m Building Toward
-        </h2>
-
-        <p className="mt-8 text-xl text-white/60 leading-relaxed">
-          I am not interested in just writing code.
-          <br /><br />
-          I am interested in working on problems where product, data, and technology intersect.
-          <br /><br />
-          I thrive in environments where:
-          <br />
-          • Decisions are made from signal, not politics
-          • Speed matters
-          • Products are treated like systems, not features
-          • And builders are trusted to own outcomes
-          <br /><br />
-          If you are building something ambitious and need someone who can
-          research, design, and engineer it end-to-end, that is where I belong.
-        </p>
       </motion.section>
 
     </main >

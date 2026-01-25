@@ -3,14 +3,23 @@
 import { useEffect, useRef } from "react";
 
 interface Star {
+    // Physics properties
     x: number;
     y: number;
+    z: number; // For 3D depth effect
+
+    // Entropy State (Random noise)
+    originX: number;
+    originY: number;
+
+    // Grid State (Structured analysis)
+    gridX: number;
+    gridY: number;
+
     size: number;
     opacity: number;
-    speedX: number;
-    speedY: number;
-    twinkleSpeed: number;
     twinklePhase: number;
+    twinkleSpeed: number;
 }
 
 export function GalaxyField() {
@@ -26,23 +35,42 @@ export function GalaxyField() {
         let width = window.innerWidth;
         let height = window.innerHeight;
         let animationFrameId: number;
+        let scrollY = 0;
 
         const stars: Star[] = [];
-        const STAR_COUNT = 1000;
+        const STAR_COUNT = width < 768 ? 250 : 1200;
 
-        // Initialize stars
+        // Initialize stars with both Random and Grid positions
         const initStars = () => {
             stars.length = 0;
+            const cols = Math.floor(Math.sqrt(STAR_COUNT * (width / height)));
+            const rows = Math.ceil(STAR_COUNT / cols);
+            const cellW = width / cols;
+            const cellH = height / rows;
+
             for (let i = 0; i < STAR_COUNT; i++) {
+                // Random Origin (Entropy)
+                const originX = (Math.random() - 0.5) * width * 1.5 + width / 2;
+                const originY = (Math.random() - 0.5) * height * 1.5 + height / 2;
+
+                // Grid Target (Structure)
+                const col = i % cols;
+                const row = Math.floor(i / cols);
+                const gridX = col * cellW + cellW / 2 + (Math.random() - 0.5) * 20; // Slight jitter
+                const gridY = row * cellH + cellH / 2 + (Math.random() - 0.5) * 20;
+
                 stars.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    size: Math.random() * 1.5, // Small, distant stars
-                    opacity: Math.random() * 0.5 + 0.1, // Low base opacity
-                    speedX: (Math.random() - 0.5) * 0.05, // Very slow drift
-                    speedY: (Math.random() - 0.5) * 0.05,
-                    twinkleSpeed: Math.random() * 0.02 + 0.005,
+                    x: originX,
+                    y: originY,
+                    z: Math.random() * 2 + 1, // Depth factor
+                    originX,
+                    originY,
+                    gridX,
+                    gridY,
+                    size: Math.random() * 1.5 + 0.5,
+                    opacity: Math.random() * 0.5 + 0.1,
                     twinklePhase: Math.random() * Math.PI * 2,
+                    twinkleSpeed: 0.02 + Math.random() * 0.03
                 });
             }
         };
@@ -55,30 +83,71 @@ export function GalaxyField() {
             initStars();
         };
 
-        handleResize();
+        const handleScroll = () => {
+            scrollY = window.scrollY;
+        };
+
         window.addEventListener("resize", handleResize);
+        window.addEventListener("scroll", handleScroll);
+        handleResize(); // Initial setup
+
+        // Physics Helpers
+        const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
+        const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
 
         const render = () => {
             ctx.clearRect(0, 0, width, height);
 
-            // Draw stars
+            // Normalize scroll progress (0 to 1 based on viewport height)
+            // We expect the chaos-to-order transition to happen in the first 2 screens (2 * height)
+            const scrollProgress = Math.max(0, scrollY / (height * 3));
+
+            // Phase 1: Entropy (0) -> Grid (0.3)
+            // Phase 2: Grid (0.3) -> Singularity/Fireball (0.7+)
+
+            const gridPhase = clamp(scrollProgress * 2.5, 0, 1); // 0 -> 1 by scroll 0.4
+            const singularityPhase = clamp((scrollProgress - 0.4) * 3, 0, 1); // Starts after 0.4
+
+            const centerX = width / 2;
+            const centerY = height / 2;
+
             stars.forEach((star) => {
-                // Update position
-                star.x += star.speedX;
-                star.y += star.speedY;
+                // 1. Calculate Target Position based on Phase
+                let targetX = lerp(star.originX, star.gridX, gridPhase);
+                let targetY = lerp(star.originY, star.gridY, gridPhase);
 
-                // Wrap around screen
-                if (star.x < 0) star.x = width;
-                if (star.x > width) star.x = 0;
-                if (star.y < 0) star.y = height;
-                if (star.y > height) star.y = 0;
+                // 2. Apply Singularity Pull (Collapse to center)
+                if (singularityPhase > 0) {
+                    // Spiral effect into center
+                    const angle = Math.atan2(targetY - centerY, targetX - centerX);
+                    const dist = Math.sqrt(Math.pow(targetX - centerX, 2) + Math.pow(targetY - centerY, 2));
 
-                // Twinkle logic
+                    const pullFactor = singularityPhase * singularityPhase; // Non-linear pull
+                    const spiralAngle = angle + pullFactor * 2; // Rotate as it pulls in
+                    const newDist = lerp(dist, 50, pullFactor); // Pull towards 50px radius
+
+                    targetX = centerX + Math.cos(spiralAngle) * newDist;
+                    targetY = centerY + Math.sin(spiralAngle) * newDist;
+                }
+
+                // 3. Smoothly interpolating current position to target (Ease-out)
+                star.x = lerp(star.x, targetX, 0.1);
+                star.y = lerp(star.y, targetY, 0.1);
+
+                // Twinkle
                 star.twinklePhase += star.twinkleSpeed;
-                const twinkle = Math.sin(star.twinklePhase) * 0.2; // +/- 0.2 opacity swing
-                const currentOpacity = Math.max(0, Math.min(1, star.opacity + twinkle));
+                const twinkle = Math.sin(star.twinklePhase) * 0.3;
 
-                ctx.fillStyle = `rgba(255, 255, 255, ${currentOpacity})`;
+                // Opacity logic: Fade out slightly when entering singularity to avoid whiteout
+                const baseOpacity = singularityPhase > 0.8 ? star.opacity * (1 - singularityPhase) : star.opacity;
+                const opacity = clamp(baseOpacity + twinkle, 0, 1);
+
+                // Color shift: White -> Blue -> Violet based on scroll
+                let color = `255, 255, 255`;
+                if (gridPhase > 0.5) color = `160, 200, 255`; // Blueish
+                if (singularityPhase > 0.5) color = `200, 160, 255`; // Violetish
+
+                ctx.fillStyle = `rgba(${color}, ${opacity})`;
                 ctx.beginPath();
                 ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
                 ctx.fill();
@@ -87,21 +156,11 @@ export function GalaxyField() {
             animationFrameId = requestAnimationFrame(render);
         };
 
-        // Only run if tab is visible
-        const handleVisibilityChange = () => {
-            if (document.hidden) {
-                cancelAnimationFrame(animationFrameId);
-            } else {
-                render();
-            }
-        };
-        document.addEventListener("visibilitychange", handleVisibilityChange);
-
         render();
 
         return () => {
             window.removeEventListener("resize", handleResize);
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
+            window.removeEventListener("scroll", handleScroll);
             cancelAnimationFrame(animationFrameId);
         };
     }, []);

@@ -48,18 +48,7 @@ export default function EnglivoPage() {
         </motion.div>
       </motion.section>
 
-      {/* THE FLUENCY GAP */}
-      <motion.section
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.6 }}
-      >
-        <h2 className="text-3xl font-semibold tracking-tight">The Fluency Gap</h2>
-        <p className="mt-6 text-white/70 leading-relaxed">{englivo.problem}</p>
-      </motion.section>
-
-      {/* PSYCHOLOGY */}
+      {/* PHASE 1: MARKET INSIGHT */}
       <motion.section
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -68,10 +57,17 @@ export default function EnglivoPage() {
         className="grid md:grid-cols-2 gap-12 items-center"
       >
         <div>
-          <h2 className="text-3xl font-semibold tracking-tight">
-            Why People Hesitate
+          <h2 className="text-3xl font-semibold tracking-tight text-white mb-8">
+            {englivo.phase1.title}
           </h2>
-          <p className="mt-6 text-white/70 leading-relaxed">{englivo.insight}</p>
+          <div className="space-y-6">
+            {englivo.phase1.points.map((point, i) => (
+              <div key={i} className="flex flex-col gap-1">
+                <span className="text-indigo-400 font-bold tracking-wide text-lg">{point.bold}</span>
+                <p className="text-white/70 leading-relaxed">{point.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
         <motion.div
           whileHover={{ scale: 1.02 }}
@@ -88,7 +84,7 @@ export default function EnglivoPage() {
         </motion.div>
       </motion.section>
 
-      {/* THE SYSTEM */}
+      {/* PHASE 2: PRODUCT STRATEGY */}
       <motion.section
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -99,7 +95,7 @@ export default function EnglivoPage() {
         <motion.div
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.4 }}
-          className="relative"
+          className="relative order-2 md:order-1"
         >
           <Image
             src="https://res.cloudinary.com/de8vvmpip/image/upload/v1767946774/thefluencyengine_xkp1b8.png"
@@ -109,28 +105,42 @@ export default function EnglivoPage() {
             className="rounded-xl shadow-lg border border-white/5 w-full h-auto"
           />
         </motion.div>
-        <div>
-          <h2 className="text-3xl font-semibold tracking-tight">
-            The Fluency Engine
+        <div className="order-1 md:order-2">
+          <h2 className="text-3xl font-semibold tracking-tight text-white mb-8">
+            {englivo.phase2.title}
           </h2>
-          <p className="mt-6 text-white/70 leading-relaxed">{englivo.system}</p>
+          <div className="space-y-6">
+            {englivo.phase2.points.map((point, i) => (
+              <div key={i} className="flex flex-col gap-1">
+                <span className="text-indigo-400 font-bold tracking-wide text-lg">{point.bold}</span>
+                <p className="text-white/70 leading-relaxed">{point.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </motion.section>
 
-      {/* ENGINEERING */}
+      {/* PHASE 3: ENGINEERING EXECUTION */}
       <motion.section
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="text-3xl font-semibold tracking-tight">The Engineering</h2>
+        <h2 className="text-3xl font-semibold tracking-tight text-white mb-8">{englivo.phase3.title}</h2>
+
+        <div className="space-y-6 mb-12 max-w-4xl">
+          {englivo.phase3.points.map((point, i) => (
+            <div key={i} className="flex flex-col gap-1">
+              <span className="text-indigo-400 font-bold tracking-wide text-lg">{point.bold}</span>
+              <p className="text-white/70 leading-relaxed">{point.text}</p>
+            </div>
+          ))}
+        </div>
+
         <div className="mt-8 mb-8">
           <ArchitectureDiagram />
         </div>
-        <p className="mt-6 text-white/70 leading-relaxed">
-          {englivo.engineering}
-        </p>
 
         <div className="grid md:grid-cols-2 gap-8 mt-12">
           <motion.div
@@ -162,70 +172,26 @@ export default function EnglivoPage() {
         </div>
       </motion.section>
 
-      {/* COMPETITIVE SYNTHESIS */}
-      <section className="mt-32 max-w-5xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-3xl font-bold tracking-tight mb-8"
-        >
-          Competitive Synthesis
-        </motion.h2>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-colors"
-          >
-            <p className="text-white/70 font-semibold">Duolingo</p>
-            <p className="mt-2 text-white/40 text-sm">
-              World-class gamification, but no deep speaking or emotional safety. Learners know English but cannot use it.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-colors"
-          >
-            <p className="text-white/70 font-semibold">ELSA Speak</p>
-            <p className="mt-2 text-white/40 text-sm">
-              Excellent phonetic analysis, but highly clinical and stressful. Users feel judged instead of supported.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="p-6 rounded-2xl border border-emerald-400/40 bg-emerald-400/5 hover:bg-emerald-400/10 transition-colors"
-          >
-            <p className="text-emerald-400 font-semibold">Englivo</p>
-            <p className="mt-2 text-white/70 text-sm">
-              Combines engagement with real-time AI fluency coaching that trains speaking reflexes in a psychologically safe environment.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* WHY IT WINS */}
+      {/* PHASE 4: MEASURABLE OUTCOMES */}
       <motion.section
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.6 }}
+        className="bg-white/5 border border-white/10 rounded-2xl p-8 md:p-12"
       >
-        <h2 className="text-3xl font-semibold tracking-tight">
-          Why Englivo Wins
+        <h2 className="text-3xl font-semibold tracking-tight text-white mb-8">
+          {englivo.phase4.title}
         </h2>
-        <p className="mt-6 text-white/70 leading-relaxed">{englivo.outcome}</p>
+
+        <div className="grid md:grid-cols-2 gap-12">
+          {englivo.phase4.points.map((point, i) => (
+            <div key={i} className="flex flex-col gap-2">
+              <span className="text-emerald-400 font-bold tracking-wide text-xl">{point.bold}</span>
+              <p className="text-white/70 leading-relaxed text-lg">{point.text}</p>
+            </div>
+          ))}
+        </div>
       </motion.section>
     </main>
   );

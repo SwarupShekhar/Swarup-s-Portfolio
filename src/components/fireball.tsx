@@ -41,6 +41,9 @@ export function FireBall({
     if (!container) return;
 
     const handleMouseMove = (e: MouseEvent) => {
+      // Small check to avoid doing work on touch devices if they trigger mousemove
+      if (window.matchMedia("(pointer: coarse)").matches) return;
+
       if (container) {
         const rect = container.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;

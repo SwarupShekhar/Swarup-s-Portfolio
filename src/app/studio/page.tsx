@@ -110,23 +110,25 @@ interface Project {
   ownership: string;
   type: string;
   link: string | null;
+  theme?: string;
 }
 
 function SystemCard({ project, index }: { project: Project, index: number }) {
   const [isHovered, setIsHovered] = useState(false);
 
-  // 3. STATUS AURA LOGIC
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Production": return "text-emerald-400 border-emerald-500/30 shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]";
-      case "Live": return "text-sky-400 border-sky-500/30 shadow-[0_0_30px_-5px_rgba(56,189,248,0.3)]";
-      case "In Development": return "text-amber-400 border-amber-500/30"; // No glow, just color
-      default: return "text-white border-white/10";
+  // 3. THEME LOGIC
+  const getThemeStyles = (theme: string) => {
+    switch (theme) {
+      case "emerald": return { text: "text-emerald-400", border: "border-emerald-500/30", shadow: "shadow-emerald-500/20", bg: "bg-emerald-500" };
+      case "blue": return { text: "text-blue-400", border: "border-blue-500/30", shadow: "shadow-blue-500/20", bg: "bg-blue-500" };
+      case "purple": return { text: "text-purple-400", border: "border-purple-500/30", shadow: "shadow-purple-500/20", bg: "bg-purple-500" };
+      case "indigo": return { text: "text-indigo-400", border: "border-indigo-500/30", shadow: "shadow-indigo-500/20", bg: "bg-indigo-500" };
+      default: return { text: "text-white", border: "border-white/10", shadow: "shadow-white/5", bg: "bg-white" };
     }
   };
 
-  const statusStyle = getStatusColor(project.status);
-  const isDev = project.status === "In Development";
+  const theme = getThemeStyles(project.theme || "emerald");
+  const isRnD = project.status.includes("R&D");
 
   // Staggered layout offset for odd items
   const marginTop = index % 2 !== 0 ? "md:mt-12" : "";
@@ -142,12 +144,12 @@ function SystemCard({ project, index }: { project: Project, index: number }) {
         relative group h-full p-8 rounded-3xl backdrop-blur-md bg-white/[0.02] 
         border transition-all duration-500 ease-out
         ${marginTop}
-        ${isHovered ? "bg-white/[0.05] border-white/20" : "border-white/5"}
+        ${isHovered ? `bg-white/[0.05] ${theme.border}` : "border-white/5"}
       `}
     >
       {/* 4. SYSTEM BOOT EFFECT (Internal Glow) */}
       <div
-        className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 ${statusStyle.split(' ')[2] || ''}`}
+        className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-10 opacity- transition-opacity duration-700 ${theme.bg}`}
       />
 
       <div className="relative z-10 flex flex-col h-full justify-between">
@@ -157,7 +159,7 @@ function SystemCard({ project, index }: { project: Project, index: number }) {
               <h3 className="text-2xl font-bold text-white group-hover:text-white/90 transition-colors">
                 {project.name}
               </h3>
-              <p className="text-[10px] uppercase tracking-widest text-emerald-400/80 mt-1 font-mono">
+              <p className={`text-[10px] uppercase tracking-widest mt-1 font-mono ${theme.text} opacity-80`}>
                 {project.ownership}
               </p>
             </div>
@@ -165,10 +167,10 @@ function SystemCard({ project, index }: { project: Project, index: number }) {
             {/* Status Pill with Pulse/Flicker */}
             <div className={`
               px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase border 
-              ${statusStyle.split(' ')[0]} ${statusStyle.split(' ')[1]} bg-black/50
+              ${theme.border} ${theme.text} bg-black/50
             `}>
               <span className="flex items-center gap-2">
-                <span className={`w-1.5 h-1.5 rounded-full bg-current ${isDev ? 'animate-pulse' : 'animate-ping'}`} />
+                <span className={`w-1.5 h-1.5 rounded-full bg-current ${isRnD ? 'animate-pulse' : 'animate-ping'}`} />
                 {project.status}
               </span>
             </div>
@@ -181,7 +183,7 @@ function SystemCard({ project, index }: { project: Project, index: number }) {
 
         {/* Launch Affordance */}
         {project.link ? (
-          <div className="flex items-center gap-3 text-white/40 group-hover:text-emerald-400 transition-colors duration-300">
+          <div className={`flex items-center gap-3 text-white/40 group-hover:${theme.text} transition-colors duration-300`}>
             <span className="text-xs font-mono uppercase tracking-widest">
               Initialize System
             </span>
