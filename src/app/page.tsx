@@ -235,68 +235,71 @@ export default function Home() {
 
         {/* SCENE 5: PROOF (UPDATED) */}
         <Scene range={[0.8, 1.0]} smoothScroll={smoothScroll} fadeOut={false}>
-          <div className="h-screen w-full flex flex-col items-center justify-center px-4 relative">
+          {/* Allow scrolling within the scene on mobile if content is too tall */}
+          <div className="h-screen w-full flex flex-col items-center justify-center px-4 relative overflow-y-auto md:overflow-visible">
+            <div className="min-h-full flex flex-col items-center justify-center pt-28 pb-12 md:py-0">
 
-            <div className="text-center mb-6 md:mb-12">
-              <p className="text-emerald-400 uppercase tracking-[0.2em] text-xs font-mono mb-2 md:mb-4">
-                LIVE SYSTEMS
-              </p>
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-2 md:mb-4">
-                Production-grade platforms.
-              </h2>
-              <p className="text-white/50 text-sm md:text-lg font-light">
-                Each system represents a different layer.
-              </p>
-            </div>
+              <div className="text-center mb-6 md:mb-12">
+                <p className="text-emerald-400 uppercase tracking-[0.2em] text-xs font-mono mb-2 md:mb-4">
+                  LIVE SYSTEMS
+                </p>
+                <h2 className="text-3xl md:text-5xl font-bold text-white mb-2 md:mb-4">
+                  Production-grade platforms.
+                </h2>
+                <p className="text-white/50 text-sm md:text-lg font-light">
+                  Each system represents a different layer.
+                </p>
+              </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 max-w-7xl w-full mb-8 md:mb-16 px-2 md:px-4">
-              <SystemPanel
-                title="Englivo"
-                status="Production"
-                desc="AI-powered fluency engine for natural English speaking."
-                tags={["Speech Analysis", "AI Feedback", "Learning UX"]}
-                href="https://englivo.com"
-                color="emerald"
-              />
-              <SystemPanel
-                title="Vaidik Tutoring"
-                status="Production"
-                desc="K–12 tutoring marketplace and student operating system."
-                tags={["Multi-role Auth", "Scheduling", "Payments"]}
-                href="https://vaidiktutoring.vercel.app"
-                color="blue"
-              />
-              <SystemPanel
-                title="WeHostt"
-                status="Production"
-                desc="Revenue SaaS for hospitality lead capture and client routing."
-                tags={["Funnels", "CRM Logic", "Conversion UX"]}
-                href="https://www.wehostt.com"
-                color="purple"
-              />
-              <SystemPanel
-                title="Vibespark"
-                status="In Development"
-                desc="Real-time voice and video experimentation using WebRTC."
-                tags={["Private R&D System"]}
-                href="#"
-                color="gray"
-                disabled
-              />
-            </div>
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 max-w-7xl w-full mb-8 md:mb-16 px-2 md:px-4">
+                <SystemPanel
+                  title="Englivo"
+                  status="Production"
+                  desc="AI-powered fluency engine for natural English speaking."
+                  tags={["Speech Analysis", "AI Feedback", "Learning UX"]}
+                  href="https://englivo.com"
+                  color="emerald"
+                />
+                <SystemPanel
+                  title="Vaidik Tutoring"
+                  status="Production"
+                  desc="K–12 tutoring marketplace and student operating system."
+                  tags={["Multi-role Auth", "Scheduling", "Payments"]}
+                  href="https://vaidiktutoring.vercel.app"
+                  color="blue"
+                />
+                <SystemPanel
+                  title="WeHostt"
+                  status="Production"
+                  desc="Revenue SaaS for hospitality lead capture and client routing."
+                  tags={["Funnels", "CRM Logic", "Conversion UX"]}
+                  href="https://www.wehostt.com"
+                  color="purple"
+                />
+                <SystemPanel
+                  title="Vibespark"
+                  status="In Development"
+                  desc="Real-time voice and video experimentation using WebRTC."
+                  tags={["Private R&D System"]}
+                  href="#"
+                  color="gray"
+                  disabled
+                />
+              </div>
 
-            <div className="flex flex-col items-center gap-4 md:gap-6">
-              <p className="text-white/40 text-sm md:text-lg font-light italic">
-                I build systems that outlast features.
-              </p>
-              <div className="flex flex-col items-center gap-6 md:gap-12">
-                <Link href="/studio">
-                  <button className="text-white/80 hover:text-emerald-400 transition-colors text-xs md:text-sm uppercase tracking-widest flex items-center gap-2 group">
-                    Explore the System Map <ArrowRight className="w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </Link>
+              <div className="flex flex-col items-center gap-4 md:gap-6">
+                <p className="text-white/40 text-sm md:text-lg font-light italic">
+                  I build systems that outlast features.
+                </p>
+                <div className="flex flex-col items-center gap-6 md:gap-12">
+                  <Link href="/studio">
+                    <button className="text-white/80 hover:text-emerald-400 transition-colors text-xs md:text-sm uppercase tracking-widest flex items-center gap-2 group">
+                      Explore the System Map <ArrowRight className="w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </Link>
 
-                <ScrollToTop />
+                  <ScrollToTop />
+                </div>
               </div>
             </div>
           </div>

@@ -3,14 +3,27 @@
 import { vibespark } from "@/content/vibespark";
 import { motion } from "framer-motion";
 
+import { useState, useEffect } from "react";
+
 export default function VibeSparkPage() {
+    // Safe First: Disable heavy background effects by default on mobile
+    const [enableEffects, setEnableEffects] = useState(false);
+
+    useEffect(() => {
+        if (window.innerWidth >= 768) {
+            setEnableEffects(true);
+        }
+    }, []);
+
     return (
         <main className="min-h-screen bg-black text-white relative overflow-hidden">
-            {/* BACKGROUND GRADIENT MESH */}
-            <div className="fixed inset-0 z-0 opacity-30 pointer-events-none">
-                <div className="absolute top-[-20%] left-[-20%] w-[80vw] h-[80vw] bg-purple-900/40 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '8s' }} />
-                <div className="absolute bottom-[-20%] right-[-20%] w-[80vw] h-[80vw] bg-cyan-900/40 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }} />
-            </div>
+            {/* BACKGROUND GRADIENT MESH - Only on Desktop */}
+            {enableEffects && (
+                <div className="fixed inset-0 z-0 opacity-30 pointer-events-none">
+                    <div className="absolute top-[-20%] left-[-20%] w-[80vw] h-[80vw] bg-purple-900/40 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '8s' }} />
+                    <div className="absolute bottom-[-20%] right-[-20%] w-[80vw] h-[80vw] bg-cyan-900/40 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }} />
+                </div>
+            )}
 
             <div className="max-w-4xl mx-auto pt-32 md:pt-40 pb-20 px-6 space-y-32 relative z-10">
 
@@ -27,12 +40,12 @@ export default function VibeSparkPage() {
                         <motion.div
                             animate={{ scale: [1, 1.1, 1] }}
                             transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                            className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500 to-cyan-400 blur-2xl opacity-40"
+                            className={`absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500 to-cyan-400 opacity-40 ${enableEffects ? 'blur-2xl' : ''}`}
                         />
                         <motion.div
                             animate={{ scale: [1, 1.05, 1] }}
                             transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                            className="w-40 h-40 md:w-52 md:h-52 rounded-full bg-gradient-to-tr from-purple-500 to-cyan-400 shadow-[0_0_60px_rgba(168,85,247,0.5)] z-10 relative overflow-hidden"
+                            className={`w-40 h-40 md:w-52 md:h-52 rounded-full bg-gradient-to-tr from-purple-500 to-cyan-400 z-10 relative overflow-hidden ${enableEffects ? 'shadow-[0_0_60px_rgba(168,85,247,0.5)]' : ''}`}
                         >
                             <div className="absolute inset-0 bg-white/10 backdrop-blur-sm" />
                             {/* Voice Waves */}

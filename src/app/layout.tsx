@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { WindSong } from "next/font/google";
 import Nav from "@/components/Nav";
-import PageTransition from "@/components/PageTransition";
 import ScrollRestoration from "@/components/ScrollRestoration";
 import PremiumBackground from "@/components/PremiumBackground";
 import Footer from "@/components/Footer";
@@ -28,7 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <ScrollRestoration />
         <PremiumBackground />
         <Nav />
-        <PageTransition>{children}</PageTransition>
+        {children}
         <Footer />
         <Analytics />
       </body>
