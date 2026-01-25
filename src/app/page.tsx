@@ -310,15 +310,28 @@ export default function Home() {
 // --- Specific Scenes & Helpers ---
 
 function Scene1({ smoothScroll }: { smoothScroll: any }) {
+  // Safe First: Disable blur by default
+  const [enableBlur, setEnableBlur] = useState(false);
+
+  useEffect(() => {
+    if (window.innerWidth >= 768) {
+      setEnableBlur(true);
+    }
+  }, []);
+
   // Visible at 0, Fades out by 0.25 (slower fade out to keep it visible longer)
   const opacity = useTransform(smoothScroll, [0, 0.28], [1, 0]);
   const y = useTransform(smoothScroll, [0, 0.28], ["0px", "-40px"]);
-  // Slower blur: start blurring later
-  const filter = useTransform(smoothScroll, [0, 0.1, 0.28], ["blur(0px)", "blur(0px)", "blur(12px)"]);
+
+  const filter = useTransform(
+    smoothScroll,
+    [0, 0.1, 0.28],
+    enableBlur ? ["blur(0px)", "blur(0px)", "blur(12px)"] : ["blur(0px)", "blur(0px)", "blur(0px)"]
+  );
 
   return (
     <motion.div
-      style={{ opacity, y, filter }}
+      style={{ opacity, y, filter: enableBlur ? filter : "none" }}
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
     >
       <motion.div
@@ -329,7 +342,7 @@ function Scene1({ smoothScroll }: { smoothScroll: any }) {
           className="text-6xl md:text-[8rem] text-white/90 leading-none mb-2"
           style={{ fontFamily: "var(--font-windsong)" }}
         >
-          Swarup Shekhar
+          <ScrambleText text="Swarup Shekhar" />
         </motion.h1>
 
         <p className="text-emerald-400 uppercase tracking-[0.2em] text-sm md:text-base font-mono mb-8">
@@ -440,16 +453,22 @@ function Scene({
     [0.96, 1.0, 1.0, fadeOut ? 1.05 : 1.0]
   );
 
-  // Optimize for mobile: Disable blur on small screens
-  const [isMobile, setIsMobile] = useState(false);
+  // Optimize for mobile: Disable blur by default (Safe First)
+  // Only enable blur if we confirm we are on a larger device
+  const [enableBlur, setEnableBlur] = useState(false);
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
+    // Enable blur only on desktop/tables
+    if (window.innerWidth >= 768) {
+      setEnableBlur(true);
+    }
   }, []);
 
   const filter = useTransform(
     smoothScroll,
     [start, start + entryDuration, end - exitDuration, end],
-    ["blur(12px)", "blur(0px)", "blur(0px)", fadeOut ? "blur(12px)" : "blur(0px)"]
+    enableBlur
+      ? ["blur(12px)", "blur(0px)", "blur(0px)", fadeOut ? "blur(12px)" : "blur(0px)"]
+      : ["blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"]
   );
 
   return (
@@ -458,7 +477,7 @@ function Scene({
         opacity,
         y,
         scale,
-        filter: isMobile ? "none" : filter // Apply conditionally here
+        filter: enableBlur ? filter : "none"
       }}
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
     >
