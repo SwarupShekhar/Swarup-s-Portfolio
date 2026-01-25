@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     "Product Studio showcasing AI systems, marketplaces, and SaaS platforms",
 };
 
-export default function RootLayout({ children }: { ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className={`${windSong.variable} bg-black text-white overflow-x-hidden`}>
