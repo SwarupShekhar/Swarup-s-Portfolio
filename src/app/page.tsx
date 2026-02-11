@@ -132,7 +132,7 @@ export default function Home() {
             x: useTransform(smoothScroll, [0, 1], ["-100%", "100%"]),
             opacity: useTransform(smoothScroll, [0.4, 0.5, 0.6], [0, 0.1, 0])
           }}
-          className="fixed bottom-0 -left-full top-0 w-full h-1 bg-linear-to-r from-transparent via-emerald-500 to-transparent blur-md pointer-events-none z-50"
+          className="fixed bottom-0 -left-full top-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent blur-md pointer-events-none z-50"
         />
       </motion.div>
 
@@ -575,7 +575,7 @@ function ScrollAffordance() {
         className="flex flex-col items-center gap-2"
       >
         <motion.div
-          className="w-px h-24 bg-linear-to-b from-transparent via-emerald-500/50 to-transparent"
+          className="w-px h-24 bg-gradient-to-b from-transparent via-emerald-500/50 to-transparent"
           animate={{
             opacity: [0.3, 1, 0.3],
             height: ["6rem", "8rem", "6rem"]
@@ -655,7 +655,7 @@ function SystemPanel({ title, status, desc, tags, href, color, disabled = false 
           {/* GHOST LOGIC OVERLAY (X-RAY) */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0">
             {/* Scanline */}
-            <div className="absolute left-0 top-0 bottom-0 w-[400px] h-full bg-linear-to-r from-emerald-500/20 via-emerald-500/5 to-transparent skew-x-[-20deg] blur-2xl animate-[scan_2s_ease-in-out_infinite]" />
+            <div className="absolute left-0 top-0 bottom-0 w-[400px] h-full bg-gradient-to-r from-emerald-500/20 via-emerald-500/5 to-transparent skew-x-[-20deg] blur-2xl animate-[scan_2s_ease-in-out_infinite]" />
 
             {/* Tech Grid Background pattern */}
             <div className="absolute inset-0 opacity-10"
