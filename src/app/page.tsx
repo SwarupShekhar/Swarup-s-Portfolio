@@ -1,6 +1,6 @@
 "use client";
 
-import { useScroll, useTransform, useSpring, useMotionTemplate, motion, useMotionValue } from "framer-motion";
+import { useScroll, useTransform, useSpring, useMotionTemplate, motion, useMotionValue, MotionValue } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { FireBall } from "@/components/fireball";
@@ -8,34 +8,46 @@ import { ParticleCircle } from "@/components/particle-circle";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { GalaxyField } from "@/components/GalaxyField";
 import { KineticStat } from "@/components/KineticStat";
+import TextLiquidEther from "@/components/TextLiquidEther";
 import { ArrowRight, Lock, CheckCircle2, ChevronUp } from "lucide-react";
+import CursorRevealText from "@/components/CursorRevealText";
+
+/**
+ * Hook: returns scrollYProgress directly on mobile (no spring lag that fights
+ * iOS momentum scrolling) and a spring-smoothed version on desktop.
+ */
+function useMobileAwareScroll(scrollYProgress: MotionValue<number>, isMobile: boolean) {
+  const spring = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 20,
+    mass: 0.5,
+  });
+  // On mobile, bypass the spring entirely — iOS momentum scroll + spring = double-smoothing = stuck feeling
+  return isMobile ? scrollYProgress : spring;
+}
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
-  // --- 1. MICRO-LAG (Smooth Scroll) ---
-  const smoothScroll = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 20,
-    mass: 0.5
-  });
+  // --- 1. SMOOTH SCROLL (disabled on mobile to avoid fighting iOS momentum) ---
+  const smoothScroll = useMobileAwareScroll(scrollYProgress, isMobile);
 
-  // --- PARALLAX LAYERS (Using smoothScroll) ---
-  // Clamp parallax at end (0.8) for "Lock-in" effect
-  const bgY = useTransform(smoothScroll, [0, 0.8, 1], ["0%", "-20%", "-20%"]);
-  // Galaxy moves slower for deep space effect
-  const galaxyY = useTransform(smoothScroll, [0, 0.8, 1], ["0%", "-15%", "-15%"]);
-  const fireballY = useTransform(smoothScroll, [0, 0.8, 1], ["0%", "-40%", "-40%"]);
+  // --- PARALLAX LAYERS (Reduced intensity on mobile) ---
+  const bgY = useTransform(smoothScroll, [0, 0.8, 1], isMobile ? ["0%", "-10%", "-10%"] : ["0%", "-20%", "-20%"]);
+  const galaxyY = useTransform(smoothScroll, [0, 0.8, 1], isMobile ? ["0%", "-8%", "-8%"] : ["0%", "-15%", "-15%"]);
+  const fireballY = useTransform(smoothScroll, [0, 0.8, 1], isMobile ? ["0%", "-20%", "-20%"] : ["0%", "-40%", "-40%"]);
 
   // Scene-based Galaxy Visibility
-  // Identity (0-0.2): Barely visible
-  // Analyst (0.2-0.5): Faint
-  // Builder (0.5-0.7): Visible
-  // Orchestrator (0.7+): Clear
   const galaxyOpacity = useTransform(
     smoothScroll,
     [0, 0.2, 0.5, 0.7, 1],
@@ -43,13 +55,10 @@ export default function Home() {
   );
 
   // --- 2. COLOR TEMPERATURE SHIFTS ---
-  // 0.3 (Analyst) -> Blue
-  // 0.6 (Builder) -> Violet
-  // 0.8 (Orchestrator) -> Electric Green/Emerald
   const fireColorRaw = useTransform(
     smoothScroll,
     [0, 0.3, 0.6, 0.8, 1],
-    ["#7c3aed", "#3b82f6", "#8b5cf6", "#10b981", "#7c3aed"] // Violet -> Blue -> Violet -> Emerald -> Violet
+    ["#7c3aed", "#3b82f6", "#8b5cf6", "#10b981", "#7c3aed"]
   );
 
   const hueRotate = useTransform(
@@ -58,32 +67,32 @@ export default function Home() {
     [0, -30, 0, 140, 0]
   );
 
-  // --- FIREBALL CINEMATICS ---
+  // --- FIREBALL CINEMATICS (Simplified scale on mobile) ---
   const fireballScale = useTransform(
     smoothScroll,
     [0, 0.05, 0.28, 0.45, 0.58, 0.62, 0.82, 1],
-    [1.0, 1.1, 0.9, 1.2, 1.0, 1.5, 1.0, 1.0]
+    isMobile ? [1.0, 1.05, 0.95, 1.1, 1.0, 1.2, 1.0, 1.0] : [1.0, 1.1, 0.9, 1.2, 1.0, 1.5, 1.0, 1.0]
   );
 
-  // Slower blur curve: Widen the clear spots
+  // Blur curve (reduced on mobile)
   const blurValue = useTransform(
     smoothScroll,
     [0, 0.28, 0.45, 0.58, 0.62, 0.82, 1],
-    ["0px", "5px", "2px", "12px", "0px", "2px", "5px"]
+    isMobile ? ["0px", "2px", "1px", "4px", "0px", "1px", "2px"] : ["0px", "5px", "2px", "12px", "0px", "2px", "5px"]
   );
 
-  // CHROMATIC ABERRATION SHOCK (At 0.58-0.62)
+  // CHROMATIC ABERRATION (Disabled on mobile — GPU-heavy)
   const chromaticShift = useTransform(
     smoothScroll,
     [0.58, 0.6, 0.62],
-    ["0px", "4px", "0px"]
+    isMobile ? ["0px", "0px", "0px"] : ["0px", "4px", "0px"]
   );
 
-  // Particle Surge at 0.58-0.62 (Orchestrator Reveal)
+  // Particle Surge (Disabled on mobile — GPU-heavy)
   const particleOpacity = useTransform(
     smoothScroll,
     [0.45, 0.55, 0.58, 0.62, 0.82],
-    [0, 0.3, 1, 1, 0]
+    isMobile ? [0, 0, 0, 0, 0] : [0, 0.3, 1, 1, 0]
   );
 
   const particleScale = useTransform(
@@ -99,7 +108,7 @@ export default function Home() {
   );
 
   return (
-    <main ref={containerRef} className="relative bg-black min-h-[600vh] selection:bg-emerald-500/30">
+    <main ref={containerRef} className={`relative bg-black selection:bg-emerald-500/30 ${isMobile ? 'min-h-[400vh]' : 'min-h-[600vh]'}`}>
 
       <div className="absolute inset-0 pointer-events-none" />
 
@@ -123,7 +132,7 @@ export default function Home() {
             x: useTransform(smoothScroll, [0, 1], ["-100%", "100%"]),
             opacity: useTransform(smoothScroll, [0.4, 0.5, 0.6], [0, 0.1, 0])
           }}
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 z-40 pointer-events-none"
+          className="fixed bottom-0 -left-full top-0 w-full h-1 bg-linear-to-r from-transparent via-emerald-500 to-transparent blur-md pointer-events-none z-50"
         />
       </motion.div>
 
@@ -132,6 +141,24 @@ export default function Home() {
         style={{ y: fireballY }}
         className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none will-change-transform"
       >
+        {/* LIQUID ETHER EFFECT — Above fireball, blended via mix-blend-screen */}
+        {!isMobile && (
+          <div className="absolute inset-0 z-20 mix-blend-screen opacity-60 pointer-events-none">
+            <TextLiquidEther
+              colors={["#7c3aed", "#a855f7", "#c084fc"]}
+              mouseForce={15}
+              cursorSize={120}
+              resolution={0.35}
+              autoDemo={true}
+              autoSpeed={0.4}
+              autoIntensity={1.8}
+              autoResumeDelay={800}
+              autoRampDuration={0.5}
+              style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
+            />
+          </div>
+        )}
+
         {/* Chromatic Aberration Wrapper */}
         <div className="relative">
           {/* RGB SPLIT LAYERS (Only visible during shock) */}
@@ -234,7 +261,7 @@ export default function Home() {
         <Scene4 smoothScroll={smoothScroll} />
 
         {/* SCENE 5: PROOF (UPDATED) */}
-        <Scene range={[0.8, 1.0]} smoothScroll={smoothScroll} fadeOut={false}>
+        <Scene range={[0.8, 1.0]} smoothScroll={smoothScroll} fadeOut={false} alignment="bottom">
           {/* Allow scrolling within the scene on mobile if content is too tall */}
           <div className="h-screen w-full flex flex-col items-center justify-center px-4 relative overflow-y-auto md:overflow-visible">
             <div className="min-h-full flex flex-col items-center justify-center pt-28 pb-12 md:py-0">
@@ -351,20 +378,50 @@ function Scene1({ smoothScroll }: { smoothScroll: any }) {
         <p className="text-emerald-400 uppercase tracking-[0.2em] text-sm md:text-base font-mono mb-8">
           DATA · TO · MATTER
         </p>
-        <motion.h2
-          className="text-2xl md:text-5xl font-bold text-white/80 leading-tight mb-8 max-w-5xl tracking-tighter"
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 1 }}
+          className="mb-6 md:mb-12 relative z-20 w-full max-w-5xl"
         >
-          I transform <span className="text-white/40">market noise</span> into <span className="text-emerald-400">product matter</span>.
-        </motion.h2>
+          <CursorRevealText
+            className="py-4 md:py-12"
+            revealBackgroundColor="#059669"
+            textColor="rgba(255,255,255,0.45)"
+            revealTextColor="#050505"
+            primaryText={
+              <h2 className="text-xl md:text-5xl font-bold leading-tight tracking-tighter text-center px-4">
+                I transform <span className="text-emerald-400">market noise</span> into <span className="text-white/80">product matter</span>.
+              </h2>
+            }
+            revealText={
+              <h2 className="text-xl md:text-5xl font-bold leading-tight tracking-tighter text-center px-4">
+                Turning <span style={{ color: '#d1fae5' }}>ambiguity</span> into <span style={{ color: '#d1fae5' }}>measurable value</span>.
+              </h2>
+            }
+          />
+        </motion.div>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2, duration: 1 }}
-          className="text-white/20 text-xs uppercase tracking-widest mt-12"
+          className="flex flex-col items-center gap-4 mt-12"
         >
-          Scroll to initialize system
-        </motion.p>
+          <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-white/60 text-xs font-mono uppercase tracking-wider">
+              Currently building <span className="text-white">Englivo</span> · Open to contracts
+            </span>
+          </div>
+
+          <p className="text-white/20 text-[10px] uppercase tracking-widest">
+            Scroll to initialize system
+          </p>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
@@ -390,28 +447,29 @@ function Scene4({ smoothScroll }: { smoothScroll: any }) {
           <ScrambleText text="Orchestrator · Enterprise Connector" />
         </p>
 
-        <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tighter z-10">
-          Syncing Business <br />
-          <span className="text-white/50">with Code</span>
+        <h2 className="text-4xl md:text-6xl font-bold text-white mb-12 tracking-tighter z-10">
+          Orchestrating <br />
+          <span className="text-white/50">Value at Scale</span>
         </h2>
 
-        <div className="flex flex-col gap-4 text-base md:text-lg text-white/60 font-light items-start text-left max-w-4xl z-10">
-          <div className="flex items-start gap-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
-            <p><strong className="text-white/90">Enterprise Strategic Partnerships:</strong> Spearheaded engagement with leaders including <span className="text-emerald-400">TELUS International, Turing, Innodata, Centific, and Tech Mahindra</span>.</p>
-          </div>
-          <div className="flex items-start gap-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
-            <p><strong className="text-white/90">Technical Requirement Synthesis:</strong> Analyzed enterprise-level AI requirements to present tailored service proposals.</p>
-          </div>
-          <div className="flex items-start gap-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
-            <p><strong className="text-white/90">Global Market Expansion:</strong> Conducted interviews with 20+ global experts to bridge local intelligence with native trends.</p>
-          </div>
-          <div className="flex items-start gap-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
-            <p><strong className="text-white/90">AI Service Integration:</strong> Analyzed 15+ specialized AI services (data annotation, fine-tuning) to execute high-impact growth.</p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl z-10 w-full">
+          {[
+            { title: "Strategic Alliances", desc: "Spearheaded engagement with leaders including TELUS, Turing, Innodata, & Centific.", icon: "Handshake" },
+            { title: "System Architecture", desc: "Synthesizing enterprise-level AI requirements into tailored, scalable service proposals.", icon: "Cpu" },
+            { title: "Global Scale", desc: "Bridging local intelligence with native trends via 20+ global expert interviews.", icon: "Globe" },
+            { title: "AI Integration", desc: "Orchestrating 15+ specialized AI services (annotation, fine-tuning) for high-impact growth.", icon: "Zap" }
+          ].map((item, i) => (
+            <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-6 text-left hover:bg-white/10 transition-colors backdrop-blur-sm">
+              <div className="mb-4 text-emerald-400">
+                {item.icon === "Handshake" && <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-1.47l-10-10a2.5 2.5 0 0 0-4 0l-1 1a1 1 0 0 0 0 3l5 5" /></svg>}
+                {item.icon === "Cpu" && <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="16" x="4" y="4" rx="2" /><rect width="6" height="6" x="9" y="9" rx="1" /><path d="M15 2v2" /><path d="M15 20v2" /><path d="M2 15h2" /><path d="M2 9h2" /><path d="M20 15h2" /><path d="M20 9h2" /><path d="M9 2v2" /><path d="M9 20v2" /></svg>}
+                {item.icon === "Globe" && <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></svg>}
+                {item.icon === "Zap" && <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>}
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
+              <p className="text-white/60 text-sm leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
         </div>
       </motion.div>
     </motion.div>
@@ -423,23 +481,28 @@ function Scene({
   range,
   smoothScroll,
   overlap = false,
-  fadeOut = true // New prop
+  fadeOut = true,
+  alignment = 'center' // 'center' | 'bottom'
 }: {
   children: React.ReactNode;
   range: [number, number];
   smoothScroll: any;
   overlap?: boolean;
   fadeOut?: boolean;
+  alignment?: 'center' | 'bottom';
 }) {
   const [start, end] = range;
-  // Slower transitions: 0.15 duration instead of 0.1 -> Reverted to 0.05 to ensure clear window exists
-  const entryDuration = 0.05;
-  const exitDuration = 0.05;
+  // Mobile needs wider transition windows because touch scrolling moves in large increments
+  const [isMobileScene, setIsMobileScene] = useState(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { setIsMobileScene(window.innerWidth < 768); }, []);
+  const entryDuration = isMobileScene ? 0.12 : 0.05;
+  const exitDuration = isMobileScene ? 0.12 : 0.05;
 
   const opacity = useTransform(
     smoothScroll,
     [start, start + entryDuration, end - exitDuration, end],
-    [0, 1, 1, fadeOut ? 0 : 1] // If fadeOut is false, stay at 1
+    [0, 1, 1, fadeOut ? 0 : 1]
   );
 
   const y = useTransform(
@@ -449,7 +512,6 @@ function Scene({
   );
 
   // Z-DEPTH & BLUR LOGIC
-  // Mimic 3D fly-through: Enters slightly far (0.96), stays close (1.0), exits past camera (1.05)
   const scale = useTransform(
     smoothScroll,
     [start, start + entryDuration, end - exitDuration, end],
@@ -457,13 +519,12 @@ function Scene({
   );
 
   // Optimize for mobile: Disable blur by default (Safe First)
-  // Only enable blur if we confirm we are on a larger device
   const [enableBlur, setEnableBlur] = useState(false);
   useEffect(() => {
-    // Enable blur only on desktop/tables
     if (window.innerWidth >= 768) {
       setEnableBlur(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filter = useTransform(
@@ -482,11 +543,12 @@ function Scene({
         scale,
         filter: enableBlur ? filter : "none"
       }}
-      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+      className={`absolute inset-x-0 flex justify-center pointer-events-none ${alignment === 'bottom' ? 'bottom-0 h-screen items-center pb-32 md:pb-0' : 'inset-y-0 items-center'
+        }`}
     >
       <motion.div
         style={{
-          pointerEvents: useTransform(smoothScroll, (v: any) => {
+          pointerEvents: useTransform(smoothScroll, (v: number) => {
             // If fadeOut is false (it persists), allow pointer events all the way to the end (and beyond)
             if (!fadeOut) return v > start ? "auto" : "none";
             return (v > start && v < end) ? "auto" : "none"
@@ -512,7 +574,14 @@ function ScrollAffordance() {
         transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
         className="flex flex-col items-center gap-2"
       >
-        <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-white to-transparent" />
+        <motion.div
+          className="w-px h-24 bg-linear-to-b from-transparent via-emerald-500/50 to-transparent"
+          animate={{
+            opacity: [0.3, 1, 0.3],
+            height: ["6rem", "8rem", "6rem"]
+          }}
+          transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+        />
       </motion.div>
     </motion.div>
   );
@@ -586,7 +655,7 @@ function SystemPanel({ title, status, desc, tags, href, color, disabled = false 
           {/* GHOST LOGIC OVERLAY (X-RAY) */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0">
             {/* Scanline */}
-            <div className="absolute top-0 bottom-0 left-[-100%] w-[20%] bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 animate-[scan_2s_ease-in-out_infinite]" />
+            <div className="absolute left-0 top-0 bottom-0 w-[400px] h-full bg-linear-to-r from-emerald-500/20 via-emerald-500/5 to-transparent skew-x-[-20deg] blur-2xl animate-[scan_2s_ease-in-out_infinite]" />
 
             {/* Tech Grid Background pattern */}
             <div className="absolute inset-0 opacity-10"

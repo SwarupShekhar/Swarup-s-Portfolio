@@ -22,6 +22,11 @@ export function FireBall({
   const blobRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMouseInside, setIsMouseInside] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   // Use refs to access latest values in animation loop without restarting it
   const stateRef = useRef({
@@ -123,7 +128,7 @@ export function FireBall({
       className="relative w-[350px] h-[350px] md:w-[700px] md:h-[700px] rounded-full opacity-80"
       style={{
         background: `radial-gradient(circle at 30% 30%, ${colors[0]}, ${colors[1]} 40%, transparent 75%)`,
-        filter: `blur(${blobRadius * 6}px)`,
+        filter: `blur(${blobRadius * (isMobile ? 3 : 6)}px)`,
       }}
       aria-hidden="true"
     >

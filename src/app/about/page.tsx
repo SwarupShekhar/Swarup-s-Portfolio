@@ -33,12 +33,14 @@ export default function About() {
       >
         <div>
           <h2 className="text-xl font-bold text-white mb-6">The "Orchestrator" Mindset</h2>
-          <p className="text-white/60 leading-relaxed text-lg">
+          <p className="text-white/60 leading-relaxed text-lg mb-6">
             We live in an era where writing code is becoming commoditized. The value has shifted from "knowing syntax" to "knowing what to build."
-            <br /><br />
-            I operate at the intersection of <strong>Product Strategy</strong> (The Why), <strong>Data Analysis</strong> (The Signal), and <strong>Full-Stack Engineering</strong> (The How).
-            <br /><br />
-            I don't wait for a PRD. I write it. I don't wait for designs. I prototype them. I don't wait for approval. I ship, measure, and iterate.
+          </p>
+          <p className="text-white/60 leading-relaxed text-lg mb-6">
+            I operate at the intersection of <strong>Product Strategy</strong> (The Why), <strong>Data Analysis</strong> (The Signal), and <strong>Full-Stack Engineering</strong> (The How). A true Product Engineer doesn't just clear tickets—they clear ambiguity.
+          </p>
+          <p className="text-white/60 leading-relaxed text-lg">
+            I don't wait for a PRD. I write it. I don't wait for designs. I prototype them. I don't wait for approval. I ship, measure, and iterate. This is the difference between a coder and an orchestrator.
           </p>
         </div>
         <div className="relative p-8 rounded-2xl bg-white/5 border border-white/10">

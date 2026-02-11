@@ -12,6 +12,9 @@ export default function PremiumBackground() {
             {/* 3. Bottom-Left Subtle Glow */}
             <div className="absolute bottom-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-emerald-900/10 rounded-full blur-[120px] opacity-40 mix-blend-screen" />
 
+            {/* 4. Bottom-Center Footer Glow (New) */}
+            <div className="absolute bottom-[-20%] left-1/2 -translate-x-1/2 w-[60vw] h-[40vw] bg-indigo-900/20 rounded-full blur-[100px] opacity-30 mix-blend-screen" />
+
             {/* 4. Moving Aurora (Optional, kept extremely subtle) */}
             <div
                 className="absolute top-[20%] left-[30%] w-[40vw] h-[40vw] bg-fuchsia-900/05 rounded-full blur-[100px] animate-pulse"

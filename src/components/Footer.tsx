@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 
 export default function Footer() {
     return (
-        <footer className="relative z-50 w-full border-t border-white/10 bg-black/80 backdrop-blur-xl mt-auto">
-            <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+        <footer className="relative z-50 w-full mt-auto bg-gradient-to-t from-black via-black/80 to-transparent pt-20 pb-8">
+            <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
 
                 {/* LEFT: System Status */}
                 <div className="flex items-center gap-3">
@@ -46,7 +46,7 @@ export default function Footer() {
             </div>
 
             {/* Bottom Bar: Copyright */}
-            <div className="w-full text-center py-4 border-t border-white/5">
+            <div className="w-full text-center py-4">
                 <p className="text-[10px] text-white/20 font-mono uppercase tracking-widest">
                     © {new Date().getFullYear()} Swarup Shekhar • Product Studio
                 </p>

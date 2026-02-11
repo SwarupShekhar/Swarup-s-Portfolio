@@ -36,9 +36,11 @@ export function GalaxyField() {
         let height = window.innerHeight;
         let animationFrameId: number;
         let scrollY = 0;
+        const isMobile = width < 768;
+        let frameCount = 0;
 
         const stars: Star[] = [];
-        const STAR_COUNT = width < 768 ? 250 : 1200;
+        const STAR_COUNT = isMobile ? 120 : 1200;
 
         // Initialize stars with both Random and Grid positions
         const initStars = () => {
@@ -88,7 +90,7 @@ export function GalaxyField() {
         };
 
         window.addEventListener("resize", handleResize);
-        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("scroll", handleScroll, { passive: true });
         handleResize(); // Initial setup
 
         // Physics Helpers
@@ -96,6 +98,14 @@ export function GalaxyField() {
         const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
 
         const render = () => {
+            // Skip every other frame on mobile to halve GPU load
+            if (isMobile) {
+                frameCount++;
+                if (frameCount % 2 !== 0) {
+                    animationFrameId = requestAnimationFrame(render);
+                    return;
+                }
+            }
             ctx.clearRect(0, 0, width, height);
 
             // Normalize scroll progress (0 to 1 based on viewport height)
@@ -160,7 +170,7 @@ export function GalaxyField() {
         const timeoutId = setTimeout(() => {
             handleResize();
             window.addEventListener("resize", handleResize);
-            window.addEventListener("scroll", handleScroll);
+            window.addEventListener("scroll", handleScroll, { passive: true });
             render();
         }, 100);
 

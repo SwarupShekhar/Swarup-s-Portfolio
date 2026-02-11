@@ -112,31 +112,57 @@ export default function Nav() {
             exit={{ opacity: 0, y: -20 }}
             className="fixed inset-0 z-40 bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 md:hidden"
           >
-            <div className="flex flex-col items-center gap-8 text-xl text-white/80 font-light">
-              <Link href="/" onClick={() => setIsOpen(false)} className="hover:text-white transition">
-                Home
-              </Link>
-              <Link href="/studio" onClick={() => setIsOpen(false)} className="hover:text-white transition">
-                System Map
-              </Link>
-              <Link href="/englivo" onClick={() => setIsOpen(false)} className="hover:text-white transition">
-                Englivo
-              </Link>
-              <Link href="/wehostt" onClick={() => setIsOpen(false)} className="hover:text-white transition">
-                WeHostt
-              </Link>
-              <Link href="/vibespark" onClick={() => setIsOpen(false)} className="hover:text-white transition">
-                VibeSpark
-              </Link>
-              <Link href="/about" onClick={() => setIsOpen(false)} className="hover:text-white transition">
-                About
-              </Link>
-            </div>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.1,
+                    delayChildren: 0.2,
+                  },
+                },
+              }}
+              className="flex flex-col items-center gap-8 text-xl text-white/80 font-light"
+            >
+              {[
+                { href: "/", label: "Home" },
+                { href: "/studio", label: "System Map" },
+                { href: "/englivo", label: "Englivo" },
+                { href: "/wehostt", label: "WeHostt" },
+                { href: "/vibespark", label: "VibeSpark" },
+                { href: "/about", label: "About" },
+              ].map((link) => (
+                <motion.div
+                  key={link.href}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+                  }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="hover:text-white transition"
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.div>
 
-            <div className="absolute bottom-10 flex items-center gap-2 text-sm text-white/40">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+              className="absolute bottom-10 flex items-center gap-2 text-sm text-white/40"
+            >
               <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
               <span>Core Online</span>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

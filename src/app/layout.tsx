@@ -6,6 +6,7 @@ import Nav from "@/components/Nav";
 import ScrollRestoration from "@/components/ScrollRestoration";
 import PremiumBackground from "@/components/PremiumBackground";
 import Footer from "@/components/Footer";
+import CustomCursor from "@/components/CustomCursor";
 import { Analytics } from "@vercel/analytics/react";
 
 const windSong = WindSong({
@@ -22,8 +23,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${windSong.variable} bg-black text-white overflow-x-hidden`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${windSong.variable} bg-black text-white overflow-x-hidden`} suppressHydrationWarning>
+        <CustomCursor />
         <ScrollRestoration />
         <PremiumBackground />
         <Nav />
