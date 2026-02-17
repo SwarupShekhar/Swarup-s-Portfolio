@@ -12,6 +12,7 @@ import TextLiquidEther from "@/components/TextLiquidEther";
 import { ArrowRight, Lock, CheckCircle2, ChevronUp } from "lucide-react";
 import CursorRevealText from "@/components/CursorRevealText";
 import ResumeButton from "@/components/ResumeButton";
+import MobileHome from "@/components/MobileHome";
 
 // Particle halo is browser-only to avoid SSR hydration mismatches
 const ParticleCircle = dynamic(
@@ -125,14 +126,16 @@ export default function Home() {
 
   const fireballFilter = useMotionTemplate`blur(${blurValue}) hue-rotate(${hueRotate}deg)`;
 
-  // Avoid any SSR/CSR hook-order weirdness until we're on the client
-  // Avoid blank screen - render immediately, defer heavy effects
-  // if (!mounted) return null; // REMOVED CAUSE OF BLANK SCREEN
+  // ─── MOBILE: render lightweight component (all hooks above still called to satisfy Rules of Hooks) ───
+  if (mounted && isMobile) {
+    return <MobileHome />;
+  }
 
-  const showDesktopEffects = mounted && !isMobile;
+  // ─── DESKTOP: full cinematic experience ───
+  const showDesktopEffects = mounted;
 
   return (
-    <main className="relative bg-black selection:bg-emerald-500/30 min-h-[400vh] md:min-h-[600vh]">
+    <main className="relative bg-black selection:bg-emerald-500/30 min-h-[600vh]">
 
       <div className="absolute inset-0 pointer-events-none" />
 

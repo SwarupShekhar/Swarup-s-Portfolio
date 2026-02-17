@@ -24,7 +24,7 @@ export default function Nav() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="fixed top-4 left-1/2 -translate-x-1/2 z-50 
-        backdrop-blur-xl bg-white/5 border border-white/10 
+        bg-black/90 md:backdrop-blur-xl md:bg-white/5 border border-white/10 
         rounded-2xl px-6 md:px-8 py-3 flex items-center justify-between gap-10 shadow-lg
         w-[90%] max-w-5xl"
       >
