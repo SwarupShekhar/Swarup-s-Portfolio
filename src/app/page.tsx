@@ -3,8 +3,8 @@
 import { useScroll, useTransform, useSpring, useMotionTemplate, motion, useMotionValue, MotionValue } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { FireBall } from "@/components/fireball";
-import { ParticleCircle } from "@/components/particle-circle";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { GalaxyField } from "@/components/GalaxyField";
 import { KineticStat } from "@/components/KineticStat";
@@ -12,6 +12,12 @@ import TextLiquidEther from "@/components/TextLiquidEther";
 import { ArrowRight, Lock, CheckCircle2, ChevronUp } from "lucide-react";
 import CursorRevealText from "@/components/CursorRevealText";
 import ResumeButton from "@/components/ResumeButton";
+
+// Particle halo is browser-only to avoid SSR hydration mismatches
+const ParticleCircle = dynamic(
+  () => import("@/components/particle-circle").then((m) => m.ParticleCircle),
+  { ssr: false }
+);
 
 /**
  * Hook: returns scrollYProgress directly on mobile (no spring lag that fights
