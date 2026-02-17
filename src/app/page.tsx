@@ -95,6 +95,10 @@ export default function Home() {
     isMobile ? ["0px", "0px", "0px"] : ["0px", "4px", "0px"]
   );
 
+  // IMPORTANT: keep hook calls unconditional (no useTransform inside conditional JSX)
+  const chromaticOpacity = useTransform(chromaticShift, (v: string) => (parseFloat(v) > 0 ? 0.5 : 0));
+  const chromaticShiftNeg = useTransform(chromaticShift, (v: string) => `-${parseFloat(v)}px`);
+
   // Particle Surge (Disabled on mobile — GPU-heavy)
   const particleOpacity = useTransform(
     smoothScroll,
@@ -171,13 +175,13 @@ export default function Home() {
           <div className="relative">
             {/* RGB SPLIT LAYERS (Only visible during shock) */}
             <motion.div
-              style={{ x: chromaticShift, opacity: useTransform(chromaticShift, v => parseFloat(v as string) > 0 ? 0.5 : 0) }}
+              style={{ x: chromaticShift, opacity: chromaticOpacity }}
               className="absolute inset-0 mix-blend-screen pointer-events-none"
             >
               <div className="w-full h-full bg-red-500/30 blur-xl scale-110" />
             </motion.div>
             <motion.div
-              style={{ x: useTransform(chromaticShift, v => `-${parseFloat(v as string)}px`), opacity: useTransform(chromaticShift, v => parseFloat(v as string) > 0 ? 0.5 : 0) }}
+              style={{ x: chromaticShiftNeg, opacity: chromaticOpacity }}
               className="absolute inset-0 mix-blend-screen pointer-events-none"
             >
               <div className="w-full h-full bg-blue-500/30 blur-xl scale-110" />
