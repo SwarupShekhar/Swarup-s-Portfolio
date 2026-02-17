@@ -129,7 +129,7 @@ export default function Home() {
   if (!mounted) return null;
 
   return (
-    <main className={`relative bg-black selection:bg-emerald-500/30 ${isMobile ? 'min-h-[300vh]' : 'min-h-[600vh]'}`}>
+    <main className={`relative bg-black selection:bg-emerald-500/30 ${isMobile ? 'min-h-[400vh]' : 'min-h-[600vh]'}`}>
 
       <div className="absolute inset-0 pointer-events-none" />
 
@@ -233,7 +233,7 @@ export default function Home() {
       )}
 
       {/* --- LAYER 3 NARRATIVE --- */}
-      <div className="fixed inset-0 pointer-events-none z-20">
+      <div className="fixed inset-0 pointer-events-none z-30">
 
         {/* SCENE 1: IDENTITY - VISIBLE ON LOAD */}
         <Scene1 smoothScroll={smoothScroll} />
@@ -396,7 +396,7 @@ function Scene1({ smoothScroll }: { smoothScroll: any }) {
         className="h-screen flex flex-col items-center justify-center text-center px-4"
       >
         <motion.h1
-          className="text-6xl md:text-[8rem] text-white/90 leading-none mb-2"
+          className="text-5xl md:text-[8rem] text-white/90 leading-tight md:leading-none mb-2"
           style={{ fontFamily: "var(--font-windsong)" }}
         >
           <ScrambleText text="Swarup Shekhar" />
