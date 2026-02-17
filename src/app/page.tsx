@@ -34,17 +34,18 @@ function useMobileAwareScroll(scrollYProgress: MotionValue<number>, isMobile: bo
 }
 
 export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
+    if (typeof window !== "undefined") {
+      setIsMobile(window.innerWidth < 768);
+    }
+    setMounted(true);
   }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
+  // Use global viewport scroll to avoid ref hydration issues
+  const { scrollYProgress } = useScroll();
 
   // --- 1. SMOOTH SCROLL (disabled on mobile to avoid fighting iOS momentum) ---
   const smoothScroll = useMobileAwareScroll(scrollYProgress, isMobile);
@@ -118,8 +119,17 @@ export default function Home() {
     [0, 180, 0]
   );
 
+  // Light sweep transforms (hoisted out of JSX to keep hooks flat)
+  const sweepX = useTransform(smoothScroll, [0, 1], ["-100%", "100%"]);
+  const sweepOpacity = useTransform(smoothScroll, [0.4, 0.5, 0.6], [0, 0.1, 0]);
+
+  const fireballFilter = useMotionTemplate`blur(${blurValue}) hue-rotate(${hueRotate}deg)`;
+
+  // Avoid any SSR/CSR hook-order weirdness until we're on the client
+  if (!mounted) return null;
+
   return (
-    <main ref={containerRef} className={`relative bg-black selection:bg-emerald-500/30 ${isMobile ? 'min-h-[300vh]' : 'min-h-[600vh]'}`}>
+    <main className={`relative bg-black selection:bg-emerald-500/30 ${isMobile ? 'min-h-[300vh]' : 'min-h-[600vh]'}`}>
 
       <div className="absolute inset-0 pointer-events-none" />
 
@@ -142,8 +152,8 @@ export default function Home() {
         {/* 4. LIGHT SWEEP */}
         <motion.div
           style={{
-            x: useTransform(smoothScroll, [0, 1], ["-100%", "100%"]),
-            opacity: useTransform(smoothScroll, [0.4, 0.5, 0.6], [0, 0.1, 0])
+            x: sweepX,
+            opacity: sweepOpacity
           }}
           className="fixed bottom-0 -left-full top-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent blur-md pointer-events-none z-50"
         />
@@ -190,7 +200,7 @@ export default function Home() {
             <motion.div
               style={{
                 scale: fireballScale,
-                filter: useMotionTemplate`blur(${blurValue}) hue-rotate(${hueRotate}deg)`
+                filter: fireballFilter
               }}
               className="relative z-10 transition-colors duration-500 ease-out"
             >
@@ -372,13 +382,17 @@ function Scene1({ smoothScroll }: { smoothScroll: any }) {
     enableBlur ? ["blur(0px)", "blur(0px)", "blur(12px)"] : ["blur(0px)", "blur(0px)", "blur(0px)"]
   );
 
+  const scene1PointerEvents = useTransform(smoothScroll, (v: any) =>
+    v < 0.28 ? "auto" : "none"
+  );
+
   return (
     <motion.div
       style={{ opacity, y, filter: enableBlur ? filter : "none" }}
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
     >
       <motion.div
-        style={{ pointerEvents: useTransform(smoothScroll, (v: any) => v < 0.28 ? "auto" : "none") }}
+        style={{ pointerEvents: scene1PointerEvents }}
         className="h-screen flex flex-col items-center justify-center text-center px-4"
       >
         <motion.h1
@@ -446,13 +460,17 @@ function Scene4({ smoothScroll }: { smoothScroll: any }) {
   const scale = useTransform(smoothScroll, [0.55, 0.8], [0.95, 1.05]);
   const y = useTransform(smoothScroll, [0.55, 0.82], ["40px", "-30px"]);
 
+  const scene4PointerEvents = useTransform(smoothScroll, (v: any) =>
+    v > 0.55 && v < 0.88 ? "auto" : "none"
+  );
+
   return (
     <motion.div
       style={{ opacity, scale, y }}
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
     >
       <motion.div
-        style={{ pointerEvents: useTransform(smoothScroll, (v: any) => (v > 0.55 && v < 0.88) ? "auto" : "none") }}
+        style={{ pointerEvents: scene4PointerEvents }}
         className="h-screen w-full flex flex-col items-center justify-center text-center px-4 relative"
       >
 
@@ -548,6 +566,12 @@ function Scene({
       : ["blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"]
   );
 
+  const pointerEvents = useTransform(smoothScroll, (v: number) => {
+    // If fadeOut is false (it persists), allow pointer events all the way to the end (and beyond)
+    if (!fadeOut) return v > start ? "auto" : "none";
+    return v > start && v < end ? "auto" : "none";
+  });
+
   return (
     <motion.div
       style={{
@@ -561,11 +585,7 @@ function Scene({
     >
       <motion.div
         style={{
-          pointerEvents: useTransform(smoothScroll, (v: number) => {
-            // If fadeOut is false (it persists), allow pointer events all the way to the end (and beyond)
-            if (!fadeOut) return v > start ? "auto" : "none";
-            return (v > start && v < end) ? "auto" : "none"
-          })
+          pointerEvents
         }}
       >
         {children}
