@@ -11,6 +11,7 @@ import { KineticStat } from "@/components/KineticStat";
 import TextLiquidEther from "@/components/TextLiquidEther";
 import { ArrowRight, Lock, CheckCircle2, ChevronUp } from "lucide-react";
 import CursorRevealText from "@/components/CursorRevealText";
+import ResumeButton from "@/components/ResumeButton";
 
 /**
  * Hook: returns scrollYProgress directly on mobile (no spring lag that fights
@@ -108,17 +109,19 @@ export default function Home() {
   );
 
   return (
-    <main ref={containerRef} className={`relative bg-black selection:bg-emerald-500/30 ${isMobile ? 'min-h-[400vh]' : 'min-h-[600vh]'}`}>
+    <main ref={containerRef} className={`relative bg-black selection:bg-emerald-500/30 ${isMobile ? 'min-h-[300vh]' : 'min-h-[600vh]'}`}>
 
       <div className="absolute inset-0 pointer-events-none" />
 
       {/* --- LAYER 0: GALAXY ENGINE --- */}
-      <motion.div
-        style={{ y: galaxyY, opacity: galaxyOpacity }}
-        className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden will-change-transform"
-      >
-        <GalaxyField />
-      </motion.div>
+      {!isMobile && (
+        <motion.div
+          style={{ y: galaxyY, opacity: galaxyOpacity }}
+          className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden will-change-transform"
+        >
+          <GalaxyField />
+        </motion.div>
+      )}
 
       {/* --- LAYER 1: BACKGROUND --- */}
       <motion.div style={{ y: bgY }} className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden will-change-transform">
@@ -137,12 +140,12 @@ export default function Home() {
       </motion.div>
 
       {/* --- LAYER 2: SYSTEM CORE --- */}
-      <motion.div
-        style={{ y: fireballY }}
-        className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none will-change-transform"
-      >
-        {/* LIQUID ETHER EFFECT — Above fireball, blended via mix-blend-screen */}
-        {!isMobile && (
+      {!isMobile && (
+        <motion.div
+          style={{ y: fireballY }}
+          className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none will-change-transform"
+        >
+          {/* LIQUID ETHER EFFECT — Above fireball, blended via mix-blend-screen */}
           <div className="absolute inset-0 z-20 mix-blend-screen opacity-60 pointer-events-none">
             <TextLiquidEther
               colors={["#7c3aed", "#a855f7", "#c084fc"]}
@@ -157,57 +160,57 @@ export default function Home() {
               style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
             />
           </div>
-        )}
 
-        {/* Chromatic Aberration Wrapper */}
-        <div className="relative">
-          {/* RGB SPLIT LAYERS (Only visible during shock) */}
-          <motion.div
-            style={{ x: chromaticShift, opacity: useTransform(chromaticShift, v => parseFloat(v as string) > 0 ? 0.5 : 0) }}
-            className="absolute inset-0 mix-blend-screen pointer-events-none"
-          >
-            <div className="w-full h-full bg-red-500/30 blur-xl scale-110" />
-          </motion.div>
-          <motion.div
-            style={{ x: useTransform(chromaticShift, v => `-${parseFloat(v as string)}px`), opacity: useTransform(chromaticShift, v => parseFloat(v as string) > 0 ? 0.5 : 0) }}
-            className="absolute inset-0 mix-blend-screen pointer-events-none"
-          >
-            <div className="w-full h-full bg-blue-500/30 blur-xl scale-110" />
-          </motion.div>
+          {/* Chromatic Aberration Wrapper */}
+          <div className="relative">
+            {/* RGB SPLIT LAYERS (Only visible during shock) */}
+            <motion.div
+              style={{ x: chromaticShift, opacity: useTransform(chromaticShift, v => parseFloat(v as string) > 0 ? 0.5 : 0) }}
+              className="absolute inset-0 mix-blend-screen pointer-events-none"
+            >
+              <div className="w-full h-full bg-red-500/30 blur-xl scale-110" />
+            </motion.div>
+            <motion.div
+              style={{ x: useTransform(chromaticShift, v => `-${parseFloat(v as string)}px`), opacity: useTransform(chromaticShift, v => parseFloat(v as string) > 0 ? 0.5 : 0) }}
+              className="absolute inset-0 mix-blend-screen pointer-events-none"
+            >
+              <div className="w-full h-full bg-blue-500/30 blur-xl scale-110" />
+            </motion.div>
 
+            <motion.div
+              style={{
+                scale: fireballScale,
+                filter: useMotionTemplate`blur(${blurValue}) hue-rotate(${hueRotate}deg)`
+              }}
+              className="relative z-10 transition-colors duration-500 ease-out"
+            >
+              <FireBall
+                blobRadius={5}
+                ballColor="#7c3aed"
+                colors={["#9c88ff", "#7c3aed", "#a855f7", "#c084fc"]}
+                intensity={0.3}
+              />
+            </motion.div>
+          </div>
+
+          {/* Particles attached to System Layer */}
           <motion.div
             style={{
-              scale: fireballScale,
-              filter: useMotionTemplate`blur(${blurValue}) hue-rotate(${hueRotate}deg)`
+              opacity: particleOpacity,
+              scale: particleScale,
+              rotate: particleRotate
             }}
-            className="relative z-10 transition-colors duration-500 ease-out"
+            className="absolute z-0"
           >
-            <FireBall
-              blobRadius={5}
-              ballColor="#7c3aed"
-              colors={["#9c88ff", "#7c3aed", "#a855f7", "#c084fc"]}
-              intensity={0.3}
+            <ParticleCircle
+              size={800}
+              particleCount={80}
+              particleSize={[2, 6]}
+              colors={["#34d399", "#a78bfa", "#f472b6"]}
             />
           </motion.div>
-        </div>
-
-        {/* Particles attached to System Layer */}
-        <motion.div
-          style={{
-            opacity: particleOpacity,
-            scale: particleScale,
-            rotate: particleRotate
-          }}
-          className="absolute z-0"
-        >
-          <ParticleCircle
-            size={800}
-            particleCount={80}
-            particleSize={[2, 6]}
-            colors={["#34d399", "#a78bfa", "#f472b6"]}
-          />
         </motion.div>
-      </motion.div>
+      )}
 
       {/* --- LAYER 3 NARRATIVE --- */}
       <div className="fixed inset-0 pointer-events-none z-20">
@@ -261,7 +264,7 @@ export default function Home() {
         <Scene4 smoothScroll={smoothScroll} />
 
         {/* SCENE 5: PROOF (UPDATED) */}
-        <Scene range={[0.8, 1.0]} smoothScroll={smoothScroll} fadeOut={false} alignment="bottom">
+        <Scene range={[0.78, 1.0]} smoothScroll={smoothScroll} fadeOut={false} alignment="bottom">
           {/* Allow scrolling within the scene on mobile if content is too tall */}
           <div className="h-screen w-full flex flex-col items-center justify-center px-4 relative overflow-y-auto md:overflow-visible">
             <div className="min-h-full flex flex-col items-center justify-center pt-28 pb-12 md:py-0">
@@ -318,15 +321,15 @@ export default function Home() {
                 <p className="text-white/40 text-sm md:text-lg font-light italic">
                   I build systems that outlast features.
                 </p>
-                <div className="flex flex-col items-center gap-6 md:gap-12">
+                <div className="flex flex-col items-center gap-6 md:gap-8">
+                  <ResumeButton />
                   <Link href="/studio">
                     <button className="text-white/80 hover:text-emerald-400 transition-colors text-xs md:text-sm uppercase tracking-widest flex items-center gap-2 group">
                       Explore the System Map <ArrowRight className="w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </Link>
-
-                  <ScrollToTop />
                 </div>
+                <ScrollToTop />
               </div>
             </div>
           </div>
@@ -428,10 +431,10 @@ function Scene1({ smoothScroll }: { smoothScroll: any }) {
 }
 
 function Scene4({ smoothScroll }: { smoothScroll: any }) {
-  // Orchestrator: 0.55 -> 0.85 (Widened for overlap)
-  const opacity = useTransform(smoothScroll, [0.55, 0.62, 0.8, 0.88], [0, 1, 1, 0]);
-  const scale = useTransform(smoothScroll, [0.55, 0.85], [0.95, 1.05]);
-  const y = useTransform(smoothScroll, [0.55, 0.88], ["40px", "-40px"]);
+  // Orchestrator: 0.55 -> 0.82 (reduced overlap with proof scene)
+  const opacity = useTransform(smoothScroll, [0.55, 0.62, 0.76, 0.82], [0, 1, 1, 0]);
+  const scale = useTransform(smoothScroll, [0.55, 0.8], [0.95, 1.05]);
+  const y = useTransform(smoothScroll, [0.55, 0.82], ["40px", "-30px"]);
 
   return (
     <motion.div

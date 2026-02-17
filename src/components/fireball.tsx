@@ -20,26 +20,25 @@ export function FireBall({
   containerRef,
 }: FireBallProps) {
   const blobRef = useRef<HTMLDivElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isMouseInside, setIsMouseInside] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
   }, []);
 
-  // Use refs to access latest values in animation loop without restarting it
+  // Animation state lives entirely in a ref to avoid extra renders
   const stateRef = useRef({
     followMouse,
     intensity,
-    isMouseInside,
-    mousePosition
+    isMouseInside: false,
+    mousePosition: { x: 0, y: 0 },
   });
 
-  // Update refs when props/state change
+  // Keep followMouse / intensity updated in the ref
   useEffect(() => {
-    stateRef.current = { followMouse, intensity, isMouseInside, mousePosition };
-  }, [followMouse, intensity, isMouseInside, mousePosition]);
+    stateRef.current.followMouse = followMouse;
+    stateRef.current.intensity = intensity;
+  }, [followMouse, intensity]);
 
   useEffect(() => {
     const container = containerRef?.current || (blobRef.current?.parentElement);
@@ -57,20 +56,20 @@ export function FireBall({
         const mouseX = e.clientX - centerX;
         const mouseY = e.clientY - centerY;
 
-        setMousePosition({
+        stateRef.current.mousePosition = {
           x: mouseX, // Store raw position, apply intensity in loop
-          y: mouseY
-        });
+          y: mouseY,
+        };
       }
     };
 
     const handleMouseEnter = () => {
-      setIsMouseInside(true);
+      stateRef.current.isMouseInside = true;
     };
 
     const handleMouseLeave = () => {
-      setIsMouseInside(false);
-      setMousePosition({ x: 0, y: 0 });
+      stateRef.current.isMouseInside = false;
+      stateRef.current.mousePosition = { x: 0, y: 0 };
     };
 
     container.addEventListener("mousemove", handleMouseMove);
