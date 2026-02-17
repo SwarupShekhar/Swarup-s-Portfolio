@@ -126,15 +126,18 @@ export default function Home() {
   const fireballFilter = useMotionTemplate`blur(${blurValue}) hue-rotate(${hueRotate}deg)`;
 
   // Avoid any SSR/CSR hook-order weirdness until we're on the client
-  if (!mounted) return null;
+  // Avoid blank screen - render immediately, defer heavy effects
+  // if (!mounted) return null; // REMOVED CAUSE OF BLANK SCREEN
+
+  const showDesktopEffects = mounted && !isMobile;
 
   return (
-    <main className={`relative bg-black selection:bg-emerald-500/30 ${isMobile ? 'min-h-[400vh]' : 'min-h-[600vh]'}`}>
+    <main className="relative bg-black selection:bg-emerald-500/30 min-h-[400vh] md:min-h-[600vh]">
 
       <div className="absolute inset-0 pointer-events-none" />
 
       {/* --- LAYER 0: GALAXY ENGINE --- */}
-      {!isMobile && (
+      {showDesktopEffects && (
         <motion.div
           style={{ y: galaxyY, opacity: galaxyOpacity }}
           className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden will-change-transform"
@@ -160,7 +163,7 @@ export default function Home() {
       </motion.div>
 
       {/* --- LAYER 2: SYSTEM CORE --- */}
-      {!isMobile && (
+      {showDesktopEffects && (
         <motion.div
           style={{ y: fireballY }}
           className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none will-change-transform"
@@ -233,7 +236,7 @@ export default function Home() {
       )}
 
       {/* --- LAYER 3 NARRATIVE --- */}
-      <div className="fixed inset-0 pointer-events-none z-30">
+      <div className="fixed inset-0 pointer-events-none z-20">
 
         {/* SCENE 1: IDENTITY - VISIBLE ON LOAD */}
         <Scene1 smoothScroll={smoothScroll} />
@@ -388,7 +391,7 @@ function Scene1({ smoothScroll }: { smoothScroll: any }) {
 
   return (
     <motion.div
-      style={{ opacity, y, filter: enableBlur ? filter : "none" }}
+      style={{ opacity, y, ...(enableBlur ? { filter } : {}) }}
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
     >
       <motion.div

@@ -10,7 +10,7 @@ const CHARS = "!@#$%^&*()_+-=[]{}|;:,.<>/?~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZa
 
 export function ScrambleText({ text, className = "" }: { text: string; className?: string }) {
     const ref = useRef<HTMLSpanElement>(null);
-    const isInView = useInView(ref, { once: true, margin: "-100px" });
+    const isInView = useInView(ref, { once: true, margin: "-10px" });
     const [displayText, setDisplayText] = useState(text);
 
     // To avoid hydration mismatch, initially show text. But for effect, we might want to start scrambled? 

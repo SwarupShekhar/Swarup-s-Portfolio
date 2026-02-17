@@ -19,9 +19,7 @@
   }
 }
 
-html, body {
-  overscroll-behavior-y: none; /* Prevent pull-to-refresh and bounce interference */
-}
+
 
 body {
   background: var(--background);
