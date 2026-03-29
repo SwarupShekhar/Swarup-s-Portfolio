@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
@@ -16,7 +17,12 @@ const imperialScript = Imperial_Script({
 });
 
 export default function Nav() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+
+  if (pathname.startsWith('/lab')) {
+    return null;
+  }
 
   return (
     <>
