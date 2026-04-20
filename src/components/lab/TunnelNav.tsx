@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { CARD_DATA } from './Tunnel';
+import { Z_INDEX, COLORS, FONTS, PERF, SPACING, A11Y } from './constants';
 
 interface TunnelNavProps {
   cameraZRef: React.MutableRefObject<number>;
@@ -15,6 +16,43 @@ export default function TunnelNav({ cameraZRef }: TunnelNavProps) {
   const jumpStartRef = useRef<number>(0);
   const jumpStartZRef = useRef<number>(0);
 
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        navigatePrev();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        navigateNext();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        resetView();
+      }
+    };
+
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [activeProject]);
+
+  const navigatePrev = () => {
+    if (activeProject > 0) {
+      jumpTo(CARD_DATA[activeProject - 1].z);
+    }
+  };
+
+  const navigateNext = () => {
+    if (activeProject < CARD_DATA.length - 1) {
+      jumpTo(CARD_DATA[activeProject + 1].z);
+    }
+  };
+
+  const resetView = () => {
+    jumpTargetRef.current = 0;
+    jumpStartRef.current = performance.now();
+    jumpStartZRef.current = cameraZRef.current;
+  };
+
   useEffect(() => {
     let lastZ = cameraZRef.current;
 
@@ -22,9 +60,9 @@ export default function TunnelNav({ cameraZRef }: TunnelNavProps) {
       rafRef.current = requestAnimationFrame(tick);
       const cz = cameraZRef.current;
 
-      // Calculate velocity from delta Z (BASE_SPEED is 0.07)
+      // Calculate velocity from delta Z
       const delta = Math.abs(cz - lastZ);
-      const velMultiplier = delta / 0.07;
+      const velMultiplier = delta / PERF.baseSpeed;
       setVelocity(velMultiplier.toFixed(1));
       lastZ = cz;
 
@@ -38,7 +76,7 @@ export default function TunnelNav({ cameraZRef }: TunnelNavProps) {
       // Handle jump (smooth lerp to card Z)
       if (jumpTargetRef.current !== null) {
         const now = performance.now();
-        const elapsed = (now - jumpStartRef.current) / 2000; // 2s duration
+        const elapsed = (now - jumpStartRef.current) / PERF.jumpDuration; // 2s duration
         const t = Math.min(1, elapsed);
         const eased = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
         const newZ = jumpStartZRef.current + (jumpTargetRef.current - jumpStartZRef.current) * eased;
@@ -62,38 +100,27 @@ export default function TunnelNav({ cameraZRef }: TunnelNavProps) {
       {/* Top-left: Exit link */}
       <a
         href="/"
+        className="interactive-link"
         style={{
           position: 'fixed',
-          top: '1.5rem',
+          top: SPACING.xl,
           left: '1.75rem',
-          fontFamily: '"JetBrains Mono", monospace',
-          fontSize: '11px',
-          fontWeight: 500,
-          color: 'rgba(248,250,252,0.4)',
-          textDecoration: 'none',
-          zIndex: 120,
-          letterSpacing: '0.05em',
-          transition: 'color 0.3s ease',
+          zIndex: Z_INDEX.navigation,
         }}
-        onMouseEnter={(e) => e.currentTarget.style.color = '#CA8A04'}
-        onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(248,250,252,0.4)'}
+        tabIndex={0}
       >
         ← EXIT
       </a>
 
       {/* Top-right: velocity indicator */}
       <div
+        className={`velocity-indicator ${Number(velocity) > PERF.velocityThreshold ? 'velocity-indicator--high' : ''}`}
         style={{
           position: 'fixed',
-          top: '1.5rem',
-          right: '1.75rem',
-          fontFamily: '"JetBrains Mono", monospace',
-          fontSize: '9px',
-          letterSpacing: '0.25em',
-          color: `rgba(248,250,252,${Number(velocity) > 1.5 ? 0.6 : 0.2})`,
-          zIndex: 120,
-          pointerEvents: 'none',
-          userSelect: 'none',
+          top: SPACING.xl,
+          right: SPACING.xl,
+          color: Number(velocity) > 1.5 ? COLORS.slate[50] : undefined,
+          opacity: Number(velocity) > 1.5 ? 0.6 : undefined,
         }}
       >
         VEL: {velocity}×
@@ -103,14 +130,14 @@ export default function TunnelNav({ cameraZRef }: TunnelNavProps) {
       <div
         style={{
           position: 'fixed',
-          right: '1.75rem',
+          right: SPACING.xl,
           top: '50%',
           transform: 'translateY(-50%)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           gap: '8px',
-          zIndex: 120,
+          zIndex: Z_INDEX.navigation,
           pointerEvents: 'none',
         }}
       >
@@ -119,7 +146,7 @@ export default function TunnelNav({ cameraZRef }: TunnelNavProps) {
           style={{
             width: '1px',
             height: '120px',
-            background: 'rgba(248,250,252,0.1)',
+            background: COLORS.alpha.white,
             position: 'relative',
           }}
         />
@@ -127,14 +154,8 @@ export default function TunnelNav({ cameraZRef }: TunnelNavProps) {
         {CARD_DATA.map((_, i) => (
           <div
             key={i}
+            className={`progress-dot ${activeProject === i ? 'progress-dot--active' : ''}`}
             style={{
-              width: '4px',
-              height: '4px',
-              borderRadius: '50%',
-              background: activeProject === i ? '#CA8A04' : 'rgba(248,250,252,0.15)',
-              boxShadow: activeProject === i ? '0 0 8px rgba(202,138,4,0.6)' : 'none',
-              transform: activeProject === i ? 'scale(1.3)' : 'scale(1)',
-              transition: 'all 0.3s ease',
               marginTop: i === 0 ? '-62px' : i === 1 ? '0' : '62px',
               position: 'absolute',
               top: `${i === 0 ? '0%' : i === 1 ? '50%' : '100%'}`,
@@ -147,13 +168,13 @@ export default function TunnelNav({ cameraZRef }: TunnelNavProps) {
       <div
         style={{
           position: 'fixed',
-          bottom: '1.5rem',
+          bottom: SPACING.xl,
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',
-          gap: '2rem',
+          gap: SPACING['2xl'],
           alignItems: 'center',
-          zIndex: 120,
+          zIndex: Z_INDEX.navigation,
           userSelect: 'none',
         }}
       >
@@ -161,43 +182,55 @@ export default function TunnelNav({ cameraZRef }: TunnelNavProps) {
           <button
             key={card.name}
             onClick={() => jumpTo(card.z)}
+            className="interactive-button"
             style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              fontFamily: '"JetBrains Mono", monospace',
-              fontSize: '8px',
-              letterSpacing: '0.3em',
               color: activeProject === i
-                ? 'rgba(202,138,4,0.7)'
-                : 'rgba(248,250,252,0.15)',
-              padding: '4px 2px',
-              transition: 'color 0.3s',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '3px',
+                ? COLORS.amber[400]
+                : COLORS.alpha.white,
             }}
+            tabIndex={0}
+            aria-label={`Navigate to ${card.name}`}
+            aria-current={activeProject === i ? 'step' : undefined}
           >
             {activeProject === i && (
-              <span style={{ color: '#CA8A04', fontSize: '6px' }}>▲</span>
+              <span style={{ color: COLORS.amber[400], fontSize: '6px' }}>▲</span>
             )}
             {card.name}
           </button>
         ))}
       </div>
 
+      {/* Keyboard navigation hint */}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: SPACING.lg,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          fontFamily: FONTS.mono,
+          fontSize: '7px',
+          letterSpacing: '0.1em',
+          color: COLORS.alpha.textDim,
+          zIndex: Z_INDEX.navigation,
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}
+        aria-hidden="true"
+      >
+        ← PREV · ESC RESET · NEXT →
+      </div>
+
       {/* Bottom-right: steer hint — permanent low opacity */}
       <div
         style={{
           position: 'fixed',
-          bottom: '1.5rem',
-          right: '1.75rem',
-          fontFamily: '"IBM Plex Sans", sans-serif',
+          bottom: SPACING.xl,
+          right: SPACING.xl,
+          fontFamily: FONTS.sans,
           fontSize: '8px',
           letterSpacing: '0.2em',
-          color: 'rgba(248,250,252,0.12)',
-          zIndex: 120,
+          color: COLORS.alpha.textDim,
+          zIndex: Z_INDEX.navigation,
           pointerEvents: 'none',
           userSelect: 'none',
           display: 'flex',

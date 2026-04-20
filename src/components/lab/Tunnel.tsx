@@ -386,62 +386,152 @@ export default function Tunnel({ cameraZRef, pausedRef }: TunnelProps) {
     scene.add(rimB);
     const shipGroup = new THREE.Group();
 
-    // Hull materials
-    const hullMat   = new THREE.MeshStandardMaterial({ color: 0x1a2035, roughness: 0.7, metalness: 0.4 });
-    const noseMat   = new THREE.MeshStandardMaterial({ color: 0x0f1628, roughness: 0.8, metalness: 0.3 });
-    const wingMat   = new THREE.MeshStandardMaterial({ color: 0x151d30, roughness: 0.75, metalness: 0.45 });
-    const nacelleMat= new THREE.MeshStandardMaterial({ color: 0x0a0f1e, roughness: 0.6, metalness: 0.6 });
-    const glowMat   = new THREE.MeshBasicMaterial({ color: 0xd97706 });
-
-    // Fuselage
-    const fuselage = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.06, 0.9), hullMat);
+    // ── SLEEK CRAFT — LatheGeometry fuselage ──
+    // Profile curve: tapered nose → widest mid → taper to engine
+    const profilePoints = [
+      new THREE.Vector2(0, -0.42),     // nose tip
+      new THREE.Vector2(0.012, -0.38), // nose taper
+      new THREE.Vector2(0.032, -0.30), // forward body
+      new THREE.Vector2(0.045, -0.15), // widening
+      new THREE.Vector2(0.048, 0),     // midpoint (widest)
+      new THREE.Vector2(0.046, 0.12),  // aft body
+      new THREE.Vector2(0.040, 0.22),  // engine taper
+      new THREE.Vector2(0.035, 0.30),  // engine mount
+      new THREE.Vector2(0.030, 0.34),  // exhaust rim
+    ];
+    const fuselageGeo = new THREE.LatheGeometry(profilePoints, 16);
+    const hullMat = new THREE.MeshPhysicalMaterial({
+      color: 0x12182a,
+      roughness: 0.3,
+      metalness: 0.85,
+      clearcoat: 0.6,
+      clearcoatRoughness: 0.15,
+    });
+    const fuselage = new THREE.Mesh(fuselageGeo, hullMat);
+    fuselage.rotation.x = Math.PI / 2; // point nose forward (-Z)
     shipGroup.add(fuselage);
 
-    // Nose cone — rotated so point faces forward (-Z)
-    const nose = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.3, 6), noseMat);
-    nose.rotation.x = Math.PI / 2;
-    nose.position.set(0, 0, -0.6);
-    shipGroup.add(nose);
+    // ── COCKPIT dome (glass bubble) ──
+    const cockpitGeo = new THREE.SphereGeometry(0.028, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.6);
+    const cockpitMat = new THREE.MeshPhysicalMaterial({
+      color: 0x88ccff,
+      transmission: 0.85,
+      roughness: 0.0,
+      metalness: 0.0,
+      ior: 1.4,
+      thickness: 0.2,
+      transparent: true,
+      opacity: 0.7,
+      side: THREE.DoubleSide,
+    });
+    const cockpit = new THREE.Mesh(cockpitGeo, cockpitMat);
+    cockpit.position.set(0, 0.038, -0.18);
+    shipGroup.add(cockpit);
 
-    // Wings
-    const wingGeo = new THREE.BoxGeometry(0.55, 0.018, 0.28);
-    const leftWing = new THREE.Mesh(wingGeo, wingMat);
-    leftWing.position.set(-0.32, -0.01, 0.08);
-    shipGroup.add(leftWing);
-    const rightWing = new THREE.Mesh(wingGeo, wingMat);
-    rightWing.position.set(0.32, -0.01, 0.08);
-    shipGroup.add(rightWing);
+    // ── SWEPT DELTA WINGS ──
+    const wingShape = new THREE.Shape();
+    wingShape.moveTo(0, 0);
+    wingShape.lineTo(0.42, 0.12);
+    wingShape.lineTo(0.38, 0.16);
+    wingShape.lineTo(0.05, 0.08);
+    wingShape.lineTo(0, 0.04);
+    wingShape.lineTo(0, 0);
+    const wingExtrudeSettings = { depth: 0.006, bevelEnabled: false };
+    const wingMat = new THREE.MeshPhysicalMaterial({
+      color: 0x0e1424,
+      roughness: 0.4,
+      metalness: 0.9,
+      clearcoat: 0.3,
+    });
+    // Right wing
+    const rWing = new THREE.Mesh(new THREE.ExtrudeGeometry(wingShape, wingExtrudeSettings), wingMat);
+    rWing.position.set(0.03, -0.008, 0.02);
+    rWing.rotation.x = -0.02;
+    shipGroup.add(rWing);
+    // Left wing (mirrored)
+    const lWing = new THREE.Mesh(new THREE.ExtrudeGeometry(wingShape, wingExtrudeSettings), wingMat);
+    lWing.scale.x = -1;
+    lWing.position.set(-0.03, -0.008, 0.02);
+    lWing.rotation.x = -0.02;
+    shipGroup.add(lWing);
 
-    // Engine nacelles
-    const nacelleGeo = new THREE.CylinderGeometry(0.028, 0.022, 0.22, 8);
-    const leftNacelle = new THREE.Mesh(nacelleGeo, nacelleMat);
-    leftNacelle.rotation.x = Math.PI / 2;
-    leftNacelle.position.set(-0.28, -0.012, 0.22);
-    shipGroup.add(leftNacelle);
-    const rightNacelle = new THREE.Mesh(nacelleGeo, nacelleMat);
-    rightNacelle.rotation.x = Math.PI / 2;
-    rightNacelle.position.set(0.28, -0.012, 0.22);
-    shipGroup.add(rightNacelle);
+    // ── VERTICAL STABILIZER ──
+    const finShape = new THREE.Shape();
+    finShape.moveTo(0, 0);
+    finShape.lineTo(0, 0.1);
+    finShape.lineTo(0.08, 0.06);
+    finShape.lineTo(0.12, 0);
+    finShape.lineTo(0, 0);
+    const fin = new THREE.Mesh(
+      new THREE.ExtrudeGeometry(finShape, { depth: 0.004, bevelEnabled: false }),
+      wingMat
+    );
+    fin.position.set(-0.002, 0.035, 0.06);
+    fin.rotation.y = 0;
+    shipGroup.add(fin);
 
-    // Engine glow discs (face backward, +Z direction)
-    const glowGeo = new THREE.CircleGeometry(0.032, 12);
-    const leftGlow = new THREE.Mesh(glowGeo, glowMat.clone());
-    leftGlow.position.set(-0.28, -0.012, 0.335);
-    shipGroup.add(leftGlow);
-    const rightGlow = new THREE.Mesh(glowGeo, glowMat.clone());
-    rightGlow.position.set(0.28, -0.012, 0.335);
-    shipGroup.add(rightGlow);
+    // ── ENGINE GLOW RING ──
+    const engineRingGeo = new THREE.TorusGeometry(0.032, 0.006, 8, 24);
+    const engineGlowMat = new THREE.MeshBasicMaterial({
+      color: 0xd97706,
+      transparent: true,
+      opacity: 0.9,
+    });
+    const engineRing = new THREE.Mesh(engineRingGeo, engineGlowMat);
+    engineRing.position.set(0, 0, 0.34);
+    shipGroup.add(engineRing);
+
+    // Engine core (inner disc)
+    const engineCoreMat = new THREE.MeshBasicMaterial({
+      color: 0xfbbf24,
+      transparent: true,
+      opacity: 0.6,
+    });
+    const engineCore = new THREE.Mesh(new THREE.CircleGeometry(0.025, 16), engineCoreMat);
+    engineCore.position.set(0, 0, 0.341);
+    shipGroup.add(engineCore);
+
+    // ── WING-TIP LIGHTS ──
+    const tipGeo = new THREE.SphereGeometry(0.006, 6, 6);
+    const tipMatR = new THREE.MeshBasicMaterial({ color: 0xff3344 });
+    const tipMatG = new THREE.MeshBasicMaterial({ color: 0x33ff88 });
+    const tipR = new THREE.Mesh(tipGeo, tipMatR);
+    tipR.position.set(0.40, 0, 0.14);
+    shipGroup.add(tipR);
+    const tipL = new THREE.Mesh(tipGeo, tipMatG);
+    tipL.position.set(-0.40, 0, 0.14);
+    shipGroup.add(tipL);
 
     scene.add(shipGroup);
 
-    // Engine point lights — sit at nacelle exhausts
-    const leftEngineLight  = new THREE.PointLight(0xd97706, 0.6, 2.5);
-    const rightEngineLight = new THREE.PointLight(0xd97706, 0.6, 2.5);
-    scene.add(leftEngineLight);
-    scene.add(rightEngineLight);
+    // ── EXHAUST PARTICLE TRAIL ──
+    const EXHAUST_COUNT = 150;
+    const exhaustPos = new Float32Array(EXHAUST_COUNT * 3);
+    const exhaustLife = new Float32Array(EXHAUST_COUNT);
+    for (let i = 0; i < EXHAUST_COUNT; i++) {
+      exhaustPos[i * 3] = 0;
+      exhaustPos[i * 3 + 1] = 0;
+      exhaustPos[i * 3 + 2] = 0;
+      exhaustLife[i] = Math.random(); // random start phase
+    }
+    const exhaustGeo = new THREE.BufferGeometry();
+    exhaustGeo.setAttribute('position', new THREE.BufferAttribute(exhaustPos, 3));
+    const exhaustMat = new THREE.PointsMaterial({
+      size: 0.018,
+      color: 0xfbbf24,
+      transparent: true,
+      opacity: 0.5,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      sizeAttenuation: true,
+    });
+    const exhaustPoints = new THREE.Points(exhaustGeo, exhaustMat);
+    scene.add(exhaustPoints);
 
-    // Ship ambient fill light so hull isn't pitch black
-    const shipFillLight = new THREE.PointLight(0x3b5bdb, 0.4, 3);
+    // Engine lights
+    const engineLight = new THREE.PointLight(0xd97706, 1.0, 4);
+    scene.add(engineLight);
+    const shipFillLight = new THREE.PointLight(0x3b5bdb, 0.3, 3);
     scene.add(shipFillLight);
 
     // ── MOUSE ──
@@ -715,39 +805,65 @@ export default function Tunnel({ cameraZRef, pausedRef }: TunnelProps) {
       });
 
       // ── SHIP update ──
-      // Position: locked to camera, below center, slightly forward
       shipGroup.position.set(
         offsetX * 0.6,
         offsetY * 0.3 - 0.72,
         cameraZ - 1.8
       );
-      // Bank left/right with steering
-      shipGroup.rotation.z = -offsetX * 0.18;
-      // Pitch forward during boost
-      shipGroup.rotation.x = boost * 0.12;
+      shipGroup.rotation.z = -offsetX * 0.22;
+      shipGroup.rotation.x = boost * 0.15;
 
-      // Hull boost tint — lerp fuselage toward a lit blue-white
-      const boostTint = boost / MAX_BOOST;
-      const r = Math.round(0x1a + boostTint * (0x3a - 0x1a));
-      const g = Math.round(0x20 + boostTint * (0x45 - 0x20));
-      const b = Math.round(0x35 + boostTint * (0x70 - 0x35));
-      (fuselage.material as THREE.MeshStandardMaterial).color.setRGB(r / 255, g / 255, b / 255);
+      // Engine intensity scales with boost
+      const boostRatio = boost / MAX_BOOST;
+      const engineColor = new THREE.Color().lerpColors(
+        new THREE.Color(0xd97706),
+        new THREE.Color(0xffffff),
+        boostRatio * 0.4
+      );
+      engineGlowMat.color.copy(engineColor);
+      engineGlowMat.opacity = 0.7 + boostRatio * 0.3;
+      engineCoreMat.color.copy(engineColor);
+      engineCoreMat.opacity = 0.4 + boostRatio * 0.6;
+      engineRing.scale.setScalar(1 + Math.sin(t * 12) * 0.04 + boostRatio * 0.15);
 
-      // Engine glow brightness
-      const engineIntensity = 0.6 + boost * 2.2;
-      const engineColor = boost > 0.1 ? 0xfbbf24 : 0xd97706;
-      leftEngineLight.intensity  = engineIntensity + Math.sin(t * 8.0) * 0.08;
-      rightEngineLight.intensity = engineIntensity + Math.sin(t * 8.0 + 0.5) * 0.08;
-      leftEngineLight.color.setHex(engineColor);
-      rightEngineLight.color.setHex(engineColor);
-      (leftGlow.material  as THREE.MeshBasicMaterial).color.setHex(engineColor);
-      (rightGlow.material as THREE.MeshBasicMaterial).color.setHex(engineColor);
+      // Wing-tip blink
+      tipMatR.opacity = 0.5 + Math.sin(t * 2.5) * 0.5;
+      tipMatG.opacity = 0.5 + Math.sin(t * 2.5 + Math.PI) * 0.5;
+      (tipMatR as THREE.MeshBasicMaterial).transparent = true;
+      (tipMatG as THREE.MeshBasicMaterial).transparent = true;
 
-      // Engine lights positioned at nacelle exhausts (world space)
+      // Hull tint during boost
+      const hullR = 0x12 / 255 + boostRatio * 0.08;
+      const hullG = 0x18 / 255 + boostRatio * 0.06;
+      const hullB = 0x2a / 255 + boostRatio * 0.12;
+      (fuselage.material as THREE.MeshPhysicalMaterial).color.setRGB(hullR, hullG, hullB);
+
+      // Exhaust particle trail
       const shipPos = shipGroup.position;
-      leftEngineLight.position.set(shipPos.x - 0.28, shipPos.y - 0.012, shipPos.z + 0.335);
-      rightEngineLight.position.set(shipPos.x + 0.28, shipPos.y - 0.012, shipPos.z + 0.335);
-      shipFillLight.position.set(shipPos.x, shipPos.y + 0.3, shipPos.z);
+      const exAttr = exhaustGeo.attributes.position;
+      for (let i = 0; i < EXHAUST_COUNT; i++) {
+        exhaustLife[i] += 0.02 + boostRatio * 0.04;
+        if (exhaustLife[i] > 1) {
+          exhaustLife[i] = 0;
+          exAttr.setXYZ(i,
+            shipPos.x + (Math.random() - 0.5) * 0.04,
+            shipPos.y + (Math.random() - 0.5) * 0.04,
+            shipPos.z + 0.36
+          );
+        } else {
+          exAttr.setZ(i, exAttr.getZ(i) + 0.06 + boostRatio * 0.15);
+          exAttr.setX(i, exAttr.getX(i) + (Math.random() - 0.5) * 0.003);
+        }
+      }
+      exAttr.needsUpdate = true;
+      exhaustMat.opacity = 0.2 + boostRatio * 0.6;
+      exhaustMat.size = 0.015 + boostRatio * 0.02;
+
+      // Lights
+      engineLight.position.set(shipPos.x, shipPos.y, shipPos.z + 0.36);
+      engineLight.intensity = 1.0 + boostRatio * 3.0 + Math.sin(t * 10) * 0.1;
+      engineLight.color.copy(engineColor);
+      shipFillLight.position.set(shipPos.x, shipPos.y + 0.2, shipPos.z);
 
       composer.render();
 

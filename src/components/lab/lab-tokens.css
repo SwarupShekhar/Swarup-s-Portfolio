@@ -1,0 +1,134 @@
+/* ============================================
+   LAB PAGE DESIGN TOKENS
+   Professional engineering system
+   ============================================ */
+
+/* Z-INDEX SCALE SYSTEM */
+:root {
+  --z-base: 0;
+  --z-canvas: 10;
+  --z-vignette: 20;
+  --z-ui-overlay: 30;
+  --z-navigation: 40;
+  --z-intro-overlay: 50;
+}
+
+/* COLOR PALETTE */
+:root {
+  /* Primary - Amber */
+  --amber-400: #CA8A04;
+  --amber-500: #EAB308;
+  --amber-600: #CA8A04;
+  
+  /* Neutral - Slate */
+  --slate-50: #F8FAFC;
+  --slate-100: #F1F5F9;
+  --slate-200: #E2E8F0;
+  --slate-400: #94A3B8;
+  --slate-600: #475569;
+  --slate-800: #1E293B;
+  --slate-900: #0F172A;
+  --slate-950: #020617;
+  
+  /* Accent - Cyan (for secondary info) */
+  --cyan-400: #22D3EE;
+  --cyan-500: #06B6D4;
+  
+  /* Alpha channels */
+  --alpha-vignette: rgba(0, 0, 0, 0.45);
+  --alpha-vignette-strong: rgba(0, 0, 0, 0.82);
+  --alpha-border: rgba(202, 138, 4, 0.3);
+  --alpha-border-strong: rgba(202, 138, 4, 0.4);
+  --alpha-text-dim: rgba(248, 250, 252, 0.3);
+  --alpha-text-muted: rgba(248, 250, 252, 0.4);
+  --alpha-text-normal: rgba(248, 250, 252, 0.6);
+  --alpha-white: rgba(248, 250, 252, 0.15);
+}
+
+/* TYPOGRAPHY SCALE */
+:root {
+  /* Font Families */
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  
+  /* Type Scale */
+  --text-xs: 10px;
+  --text-sm: 11px;
+  --text-md: 14px;
+  --text-lg: clamp(3rem, 7vw, 7rem);
+  
+  /* Letter Spacing */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.05em;
+  --tracking-wider: 0.1em;
+  --tracking-widest: 0.2em;
+  --tracking-extreme: 0.3em;
+  --tracking-ultra: 0.5em;
+  
+  /* Font Weights */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+}
+
+/* SPACING SYSTEM */
+:root {
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+}
+
+/* TRANSITIONS */
+:root {
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  --transition-slower: 500ms ease;
+  --transition-instant: 80ms ease;
+}
+
+/* EFFECTS */
+:root {
+  --glow-amber: 0 0 8px rgba(202, 138, 4, 0.6);
+  --glow-amber-subtle: 0 0 5px rgba(202, 138, 4, 0.3);
+  --glow-cyan: 0 0 8px rgba(34, 211, 238, 0.6);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* RESPONSIVE BREAKPOINTS */
+@media (max-width: 768px) {
+  :root {
+    --text-xs: 8px;
+    --text-sm: 9px;
+    --text-md: 12px;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 0.75rem;
+    --spacing-lg: 1rem;
+    --spacing-xl: 1.5rem;
+  }
+}
+
+/* ACCESSIBILITY - REDUCED MOTION */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+    --transition-slower: 0ms;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -37,7 +37,7 @@ export default function LabLayout({ children }: { children: React.ReactNode }) {
         }
 
         /* Google Fonts for Lab */
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=IBM+Plex+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500;700&display=swap');
       `}</style>
       {children}
     </>
